@@ -35,3 +35,5 @@ def test_provider_errors_are_classified_and_multistatement_json_is_supported(mon
     assert query("SELECT 1") == {"ok": False, "error": "PACKAGE_NOT_FOUND", "codes": ["100357"]}
     monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: SimpleNamespace(returncode=0, stderr="", stdout='[{"status":"created"}]\n[{"RUNTIME_RESULT":"3.11.15"}]'))
     assert query("SELECT 1")["rows"][-1] == {"RUNTIME_RESULT": "3.11.15"}
+    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: SimpleNamespace(returncode=0, stderr="", stdout='[[{"status":"created"}],[{"RUNTIME_RESULT":"3.11.15"}]]'))
+    assert query("SELECT 1")["rows"][-1] == {"RUNTIME_RESULT": "3.11.15"}

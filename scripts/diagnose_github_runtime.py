@@ -30,9 +30,17 @@ def query(sql):
         # CLI multi-statement results can contain separate JSON documents.
         remaining, rows = result.stdout.strip(), []
         decoder = json.JSONDecoder()
+        def append_rows(value):
+            if isinstance(value, dict):
+                rows.append(value)
+            elif isinstance(value, list):
+                for item in value:
+                    append_rows(item)
+            else:
+                raise ValueError("UNEXPECTED_RESULT_SHAPE")
         while remaining:
             value, offset = decoder.raw_decode(remaining)
-            rows.extend(value if isinstance(value, list) else [value])
+            append_rows(value)
             remaining = remaining[offset:].strip()
         return {"ok": True, "rows": rows}
     except ValueError:
@@ -77,6 +85,7 @@ def diagnose(account, config, execute=query):
             fields = {"name", "runtime_name", "default_packages", "user_packages", "query_warehouse", "main_file"}
             result["rows"] = [{k: v for k, v in item.items() if k.lower() in fields} for item in result["rows"]]
         report["checks"][name] = result
+        print("RUNTIME_DIAGNOSIS_CHECK " + json.dumps({name: result}, separators=(",", ":")), flush=True)
     return report
 
 
