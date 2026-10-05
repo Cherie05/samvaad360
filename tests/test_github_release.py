@@ -35,3 +35,14 @@ def test_github_target_cannot_inject_sql_or_another_operation(tmp_path):
         build(account="TESTORG-ACCOUNT'; DROP DATABASE D", viewer="OWNER", output=tmp_path)
     with pytest.raises(ValueError):
         build(account="TESTORG-ACCOUNT", viewer="OWNER", output=tmp_path, mode="wipe-data")
+
+
+def test_pinned_runtime_check_is_separate_from_the_main_and_default_apps(tmp_path):
+    path, _ = build(account="TESTORG-ACCOUNT", viewer="OWNER", output=tmp_path, mode="runtime-pinned-check")
+    sql = path.read_text()
+    assert sql.count("PUT ") == 2 and "SAMVAAD_PINNED_RUNTIME_CHECK" in sql
+    assert 'ALTER STREAMLIT "SAMVAAD_STAGING"."APP"."SAMVAAD_RUNTIME_CHECK"' not in sql
+    assert "SAMVAAD360/versions/live/" not in sql
+    assert not any(word in sql for word in ("GRANT ", "INSERT ", "DELETE ", "UPDATE "))
+    environment = (tmp_path / "runtime-pinned-check/environment.yml").read_text()
+    assert "python=3.11.15" in environment and "snowflake-snowpark-python=1.55.0" in environment
