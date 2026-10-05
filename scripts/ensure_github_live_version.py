@@ -1,8 +1,10 @@
 """Restore a missing writable app version without discarding existing edits."""
 import json
 import os
+from pathlib import Path
 
 from cloud.config import CloudConfig
+from cloud.runtime_repair import download_uri
 from scripts.diagnose_github_runtime import query
 
 
@@ -14,14 +16,17 @@ def ensure(account, config, execute=query):
     if str(identity.get("ACCOUNT", "")).upper() != account.upper() or identity.get("ROLE") != "SAMVAAD_HACKATHON":
         raise ValueError("WRONG_ACCOUNT_OR_ROLE")
     uri = f"snow://streamlit/{config.database.upper()}.APP.SAMVAAD360/versions/live/"
-    current = execute(f"LIST '{uri}'")
+    folder = Path("output/cloud/live-probe")
+    folder.mkdir(parents=True, exist_ok=True)
+    inspect = f"GET '{uri}environment.yml' '{download_uri(folder)}'"
+    current = execute(inspect)
     if current.get("ok"):
         return {"ready": True, "created": False}
     if "099108" not in current.get("codes", []):
-        raise ValueError("LIVE_VERSION_INSPECTION_FAILED")
+        raise ValueError("LIVE_VERSION_INSPECTION_FAILED " + json.dumps(current))
     result = execute("ALTER STREAMLIT " + config.object("APP", "SAMVAAD360") + " ADD LIVE VERSION FROM LAST")
-    if not result.get("ok") or not execute(f"LIST '{uri}'").get("ok"):
-        raise ValueError("LIVE_VERSION_RECOVERY_FAILED")
+    if not result.get("ok") or not execute(inspect).get("ok"):
+        raise ValueError("LIVE_VERSION_RECOVERY_FAILED " + json.dumps(result))
     return {"ready": True, "created": True}
 
 

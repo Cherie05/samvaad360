@@ -24,7 +24,7 @@ def test_existing_live_edits_are_preserved_without_commit_abort_or_recreate():
         calls.append(sql)
         return IDENTITY if sql.startswith("SELECT") else {"ok": True, "rows": [{"name": "streamlit_app.py"}]}
     assert ensure("TESTORG-ACCOUNT", CONFIG, execute) == {"ready": True, "created": False}
-    assert len(calls) == 2 and calls[1].startswith("LIST ")
+    assert len(calls) == 2 and calls[1].startswith("GET ")
 
 
 def test_only_known_missing_version_error_allows_recovery():
