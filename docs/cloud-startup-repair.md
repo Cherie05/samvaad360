@@ -14,7 +14,11 @@ dependencies:
   - streamlit=1.52.2
 ```
 
-The selected next path is [GitHub deployment](github-deployment.md) with short-lived authentication, then an unpinned default-runtime diagnostic app. The one-time service-user SQL is pending. No further private password prompt is currently required; the earlier diagnostic connections were closed. No customer data or hosted app files were modified by those helper attempts. A Windows GET backup-path failure was corrected in the helper before source publication. Python is the runtime argument of the package resolver, not a package to include in its PACKAGES specification.
+The [GitHub deployment](github-deployment.md) connection is now verified. [The actual run](https://github.com/Cherie05/samvaad360/actions/runs/37330489632) passed 210 tests, authenticated with a short-lived OIDC token, published `SAMVAAD_RUNTIME_CHECK` and confirmed the 20-customer count. The owner opened this default-environment app and reported the same compilation error with the additional detail **`Packages not found: python==3.11`**. It has no `environment.yml` or customer-data queries. This reproduces the failure independently of Samvaad's custom packages and application code; it does not yet identify the account/runtime cause.
+
+The manual **Diagnose Snowflake hosted runtime** GitHub workflow now inspects the two app descriptors, the Python package catalog and temporary Python 3.11/3.10 UDFs. Its Python 3.11 library probe uses Streamlit/Snowpark in `PACKAGES` and specifies Python separately with `RUNTIME_VERSION`, following the documented UDF interface. It changes no customer tables, application files, grants, package policies or billing settings. Temporary functions expire with their CLI sessions. Findings appear as `RUNTIME_DIAGNOSIS` in the workflow log. An ordinary Python UDF result is distinct from actual hosted app startup.
+
+The first OIDC login used GitHub's older name-only subject and failed. The owner completed the scoped correction to this new repository's immutable owner/repository identity; the retried deployment passed. No further private password prompt is currently required. The earlier diagnostic connections were closed; no customer data or hosted app files were modified by those helper attempts. A Windows GET backup-path failure was corrected in the helper before source publication. Python is the runtime argument of the package resolver, not a package to include in its PACKAGES specification.
 
 ## Private diagnostic and targeted repair
 

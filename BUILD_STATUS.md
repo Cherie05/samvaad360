@@ -2,7 +2,7 @@
 
 Updated 5 October 2026 IST. The local lender web application and voice lab pass verification; production is not ready. The owner privately authenticated account `ZYLTUKM-HU63768` / `ARUNVPP24`. The separate hosted synthetic demo is now published, with warehouse/monitor/role/database creation and synthetic import reconciled. Hosted browser, live Cortex answers and CoCo account/skills/hooks remain unverified.
 
-Hosted startup subsequently failed with a Python package compilation error reported by the owner; the simplified environment also failed. The website is not yet working in Snowflake. The private GitHub repository and workflow are connected, with two successful GitHub test runs. Eight helper guard checks pass, the latest local full suite has **207 passing tests**, and subsequent cloud/GitHub boundary checks have **35 passing tests**. The one-time Snowflake GitHub service-user setup completed; its short-lived login and default-runtime diagnostic are being verified. See [startup repair](docs/cloud-startup-repair.md) and [GitHub deployment](docs/github-deployment.md).
+Hosted startup subsequently failed with a Python package compilation error reported by the owner; the simplified environment also failed. The private GitHub workflow passed **210 tests** and its deployment job authenticated successfully using a short-lived OIDC token. It published `SAMVAAD_RUNTIME_CHECK` with no custom environment and confirmed the 20-customer count. The owner opened that diagnostic and reported **`Packages not found: python==3.11`**. The main website and native diagnostic both fail before app code starts; account/runtime diagnosis remains necessary. The original name-only GitHub identity was rejected; Snowflake now trusts this new repository's exact immutable identity. See [startup repair](docs/cloud-startup-repair.md) and [GitHub deployment](docs/github-deployment.md).
 
 | Deliverable | State | Evidence |
 | --- | --- | --- |
@@ -13,20 +13,20 @@ Hosted startup subsequently failed with a Python package compilation error repor
 | New transcript ingestion | Complete locally | New hardship replaces a reminder and suppresses growth |
 | Persisted voice conversation lab | Complete locally | Permission/identity gates, approved terms, callback/decline/opt-out and safe replay |
 | Actual local speech output and recognition | Verified | Windows SAPI WAV; pinned Whisper CPU ASR; reviewed-text submission |
-| Current automated gate | Passed | 207 tests; subsequent targeted 32 cloud/helper checks also pass |
+| Current automated gate | Passed | Actual GitHub run: 210 tests; local cloud/helper/release boundary run: 35 checks |
 | Actual localhost voice/API rehearsal | Passed | 5 checks; real synthesis/transcription and persisted callback |
 | Browser visual and workflow rehearsal | Passed | 6 real-browser checks; 8 saved desktop/mobile PNG views inspected |
 | Cloud analytical assets, setup and capability doctor | Prepared and offline tested | 38 tests; metadata-only connection setup, schema/views, fixtures and bounded Cortex SQL |
 | Full cloud application repository/providers | Pending | Local factory only; cloud mode raises `CLOUD_PENDING` |
 | Separate hosted hackathon demo | Published; hosted package startup failed | Catalog/library resolution checked in the live account; simplified environment still failed; default runtime diagnosis remains required |
-| GitHub source and CI/deployment workflow | Private repo connected; CI passed; service user configured | `Cherie05/samvaad360`; OIDC login and default-runtime diagnostic deployment being verified |
+| GitHub source and CI/deployment workflow | Private repo connected; tests, OIDC login and diagnostic publication passed | [Verified run](https://github.com/Cherie05/samvaad360/actions/runs/37330489632); default-runtime browser startup failed on Python package resolution |
 | Actual CoCo CLI invocation | Version/help verified; account use pending | Native 1.1.87 installed from checksum-verified official archive; skills/hooks/model access unverified |
 | Self-hosted telecalling design and asset review | Prepared | `docs/telecalling-plan.md`, `docs/voice-license-review.md`, `infra/voice/` |
 | Production neural voice, PBX, carrier and identity | Pending | No real calls; no production asset loading approved |
 
 ## Evidence
 
-- Current full suite: **199 passed in 32.53 seconds**; one nonblocking test-client deprecation warning. `output/cloud/hackathon-preflight-tests.xml`. Earlier production audit ran 175 tests; those XML files remain historical evidence.
+- Latest completed GitHub full suite: **210 passed in 37.98 seconds**, one nonblocking test-client deprecation warning. [Test and diagnostic deployment](https://github.com/Cherie05/samvaad360/actions/runs/37330489632). Earlier 175-, 199- and 207-test runs remain historical evidence; the diagnostic deployment proves publication and authentication, not browser startup.
 - Initial actual localhost application rehearsal: **7 passed** across three hero journeys, invitation response/opt-out/replay, ingestion, health and authentication. `output/local-runtime-check.json`.
 - Actual voice/audio localhost rehearsal: **5 passed**. The synthetic sentence was recognized exactly after normalization; the latest speech plus recognition round trip took 14.049 seconds during development verification. This is not a telephone, accuracy or production latency benchmark. `output/local-voice-runtime-check.json`.
 - Standalone audio smoke recognized the same synthetic phrase using local CPU Whisper. `output/local-voice-check.json`; sample WAV at `output/voice-sample.wav`.
@@ -41,7 +41,7 @@ Hosted startup subsequently failed with a Python package compilation error repor
 
 ## Remaining work in order
 
-1. Open the published app using SAMVAAD_HACKATHON; verify hosted identity, the four tabs and persisted demo review. Check account credit/expiry entitlements and one bounded Cortex answer/enrichment. CoCo account authentication/skills/hooks remain a distinct step.
+1. Diagnose `Packages not found: python==3.11` using the OIDC metadata/temporary-UDF workflow; resolve managed app startup, then verify the main app's identity, four tabs and persisted demo review. Check account credit/expiry entitlements and one bounded Cortex answer/enrichment. CoCo account authentication/skills/hooks remain a distinct step.
 2. Implement a PostgreSQL operational repository/outbox for a standard trial, preserving atomic approvals, consent, action claims and event deduplication. Standard Snowflake keys are unenforced; hybrid tables are unavailable in standard trials. Then connect the application to cloud analytics/providers and trusted identities.
 3. Pin and review the stock neural TTS/tokenizer/codec/runtime bundle, benchmark phone-bandwidth pronunciation and latency, and evaluate ASR on English/Hindi borrower speech. Parler Mini v1 is provisional; v1.1 is blocked pending tokenizer terms.
 4. Implement the durable voice worker and Asterisk ARI audio/bridge adapter in a private SIP lab. Add crash recovery, signed/authenticated events, verified identity and human handoff.

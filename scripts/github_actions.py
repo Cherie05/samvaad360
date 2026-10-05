@@ -27,11 +27,12 @@ def session(owner):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("operation", choices=["configure", "status", "run"])
+    parser.add_argument("operation", choices=["configure", "status", "run", "job-log"])
     parser.add_argument("--owner", default="Cherie05")
     parser.add_argument("--repo", default="samvaad360")
     parser.add_argument("--enable-deploy", action="store_true")
     parser.add_argument("--mode", choices=["app", "runtime-check"], default="app")
+    parser.add_argument("--job-id", type=int)
     args = parser.parse_args()
     if not re.fullmatch(r"[A-Za-z0-9-]{1,39}", args.owner) or not re.fullmatch(r"[A-Za-z0-9_.-]{1,100}", args.repo):
         raise SystemExit("INVALID_REPOSITORY_TARGET")
@@ -57,6 +58,23 @@ def main():
         if response.status_code != 204:
             raise SystemExit(f"WORKFLOW_DISPATCH_FAILED_HTTP_{response.status_code}")
         print("MAIN_BRANCH_WORKFLOW_REQUESTED")
+    elif args.operation == "job-log":
+        if not args.job_id or args.job_id < 1:
+            raise SystemExit("JOB_ID_REQUIRED")
+        response = client.get(base + f"/actions/jobs/{args.job_id}/logs", timeout=30)
+        if response.status_code != 200:
+            raise SystemExit(f"CI_JOB_LOG_LOOKUP_FAILED_HTTP_{response.status_code}")
+        # Keep only relevant diagnostic lines, not the complete runner log.
+        lines = response.content.decode("utf-8", errors="replace").splitlines()
+        positions = set()
+        for index, line in enumerate(lines):
+            if re.search(r"RUNTIME_DIAGNOSIS|\b\d+ passed\b|::error|\bError\b|\berror\b|\bFAILED\b|\bfailed\b|\bSuccess\b|\bFROM\b|\bSQL compilation", line):
+                positions.update(range(index, min(index + 8, len(lines))))
+        selected = [re.sub(r"\x1b\[[0-9;]*m", "", lines[index]) for index in sorted(positions)]
+        excerpt = "\n".join(selected[-45:])
+        excerpt = re.sub(r"\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b", "[REDACTED_TOKEN]", excerpt)
+        excerpt = re.sub(r"\b(?:gh[pousr]_[A-Za-z0-9]+|github_pat_[A-Za-z0-9_]+)\b", "[REDACTED_TOKEN]", excerpt)
+        print(excerpt[:8000] or "No selected pass/error lines in this completed job log.")
     else:
         response = client.get(base + "/actions/runs", params={"per_page": 3}, timeout=30)
         if response.status_code != 200:

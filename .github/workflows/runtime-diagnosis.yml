@@ -1,0 +1,33 @@
+name: Diagnose Snowflake hosted runtime
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    if: github.ref == 'refs/heads/main' && vars.SAMVAAD_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: SAMVAAD_GITHUB_DEPLOYER
+      SNOWFLAKE_ROLE: SAMVAAD_HACKATHON
+      SNOWFLAKE_WAREHOUSE: SAMVAAD_XS
+      SNOWFLAKE_DATABASE: SAMVAAD_STAGING
+      SNOWFLAKE_SCHEMA: APP
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - uses: snowflakedb/snowflake-actions@v3.0.0
+        with:
+          cli-version: '3.16.0'
+          use-oidc: true
+      - name: Inspect package metadata and temporary runtime functions
+        run: python -m scripts.diagnose_github_runtime

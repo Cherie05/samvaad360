@@ -2,6 +2,8 @@
 
 The private repository is [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). The frontend and Python/Snowpark backend run inside the existing Snowflake Streamlit app; customer data stays in `SAMVAAD_STAGING`. GitHub provides source control, automated checks and code deployment. This setup does not publish a public borrower portal or deploy the local telephone worker.
 
+Verified on 5 October 2026: [210 tests and the diagnostic deployment passed](https://github.com/Cherie05/samvaad360/actions/runs/37330489632). The deployment authenticated without a saved personal Snowflake password, created the live `SAMVAAD_RUNTIME_CHECK` app and confirmed 20 customer rows. Repository variables are configured and main-branch deployment is enabled. The owner opened the diagnostic and reported **`Packages not found: python==3.11`**; hosted startup remains unresolved even without custom dependencies. The manual **Diagnose Snowflake hosted runtime** workflow now supports metadata and temporary UDF checks through the same OIDC connection. These setup instructions document the completed connection and can also be used for recovery.
+
 ## First connection
 
 The local helper can perform step 2 privately without copying SQL. Run `powershell.exe -NoProfile -NoExit -ExecutionPolicy Bypass -File .\scripts\connect_github_cloud.ps1`, or use the **Samvaad 360 - Connect GitHub** window the developer opens. Enter the hidden password/MFA there; the helper checks the account/user/role, refuses to replace an existing deployment user's authentication, and applies the exact reviewed SQL. `output/cloud/github-connection.json` records its status without credentials.
@@ -14,9 +16,11 @@ The local helper can perform step 2 privately without copying SQL. Run `powershe
 | --- | --- |
 | `SNOWFLAKE_ACCOUNT` | `ZYLTUKM-HU63768` |
 | `SAMVAAD_VIEWER` | `ARUNVPP24` |
-| `SAMVAAD_DEPLOY_ENABLED` | `true` after the one-time account setup and hosted check |
+| `SAMVAAD_DEPLOY_ENABLED` | `true` after the one-time account setup; enabled now for diagnostic and app releases |
 
-No personal Snowflake password or MFA code goes into a GitHub secret. The official Snowflake action obtains a short-lived OIDC token for each deployment. Do not change the workflow's job to use a named GitHub environment without also updating the trusted OIDC subject: GitHub emits a different subject when a job targets an environment.
+No personal Snowflake password or MFA code goes into a GitHub secret. The official Snowflake action obtains a short-lived OIDC token for each deployment. New repositories created after 15 July 2026 include immutable owner/repository IDs in their subject. This repository emits `repo:Cherie05@134769533/samvaad360@1405935541:ref:refs/heads/main`; these IDs were verified against GitHub repository metadata and the actual Snowflake login error. The original name-only subject was rejected and the reviewed correction is [007_github_oidc_subject.sql](../cloud/sql/007_github_oidc_subject.sql). Keep the immutable identity; do not weaken it to a broader repository/owner pattern. [GitHub's format change](https://github.blog/changelog/2026-04-23-immutable-subject-claims-for-github-actions-oidc-tokens/).
+
+Do not change the workflow's job to use a named GitHub environment without also updating the trusted OIDC subject: GitHub emits a different subject when a job targets an environment.
 
 4. Under **Actions**, select **Test and deploy Samvaad 360 > Run workflow**, with branch **main**. Check that the test and deploy jobs pass, then reopen the hosted app. Publication output alone does not verify the browser. The account/role guard runs before file uploads.
 

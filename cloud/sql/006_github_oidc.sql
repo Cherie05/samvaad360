@@ -7,7 +7,7 @@ CREATE USER SAMVAAD_GITHUB_DEPLOYER
  WORKLOAD_IDENTITY=(
   TYPE=OIDC
   ISSUER='https://token.actions.githubusercontent.com'
-  SUBJECT='repo:Cherie05/samvaad360:ref:refs/heads/main'
+  SUBJECT='repo:Cherie05@134769533/samvaad360@1405935541:ref:refs/heads/main'
  )
  DEFAULT_ROLE=SAMVAAD_HACKATHON
  DEFAULT_WAREHOUSE=SAMVAAD_XS;
