@@ -22,7 +22,9 @@ def ensure(account, config, execute=query):
     current = execute(inspect)
     if current.get("ok"):
         return {"ready": True, "created": False}
-    if "099108" not in current.get("codes", []):
+    # PUT and GET report different filesystem codes for an unavailable
+    # version in this account. Both were observed on this exact live URI.
+    if not {"099108", "099112"}.intersection(current.get("codes", [])):
         raise ValueError("LIVE_VERSION_INSPECTION_FAILED " + json.dumps(current))
     result = execute("ALTER STREAMLIT " + config.object("APP", "SAMVAAD360") + " ADD LIVE VERSION FROM LAST")
     if not result.get("ok") or not execute(inspect).get("ok"):

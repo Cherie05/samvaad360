@@ -26,9 +26,13 @@ The owner subsequently confirmed that **`SAMVAAD_PINNED_RUNTIME_CHECK` opens** a
 
 Two later main-app uploads failed with **099108: Live version is not found**, before the first `PUT`; the previous release remains committed. The deployment now inspects the live file location before and after an app update and restores it from the committed version only for that exact missing-version error. Other errors stop deployment. Existing live edits are preserved by the inspection; no abort, app replacement or data reload is used. A real GitHub run must still verify this recovery path.
 
+The first release guard used `LIST`, which this location rejected. Its GET replacement reported **099112** on the same unavailable live location; the bounded helper now recognizes both observed filesystem codes before attempting `ADD LIVE VERSION FROM LAST`. The optional diagnosis input `repair_main_live` runs only this recovery. It does not upload application files or bypass the full-test gate for ordinary app releases. Unknown errors still stop the helper.
+
 The first OIDC login used GitHub's older name-only subject and failed. The owner completed the scoped correction to this new repository's immutable owner/repository identity; the retried deployment passed. No further private password prompt is currently required. The earlier diagnostic connections were closed; no customer data or hosted app files were modified by those helper attempts. A Windows GET backup-path failure was corrected in the helper before source publication. Python is the runtime argument of the package resolver, not a package to include in its PACKAGES specification.
 
-## Private diagnostic and targeted repair
+## Earlier private diagnostic helper
+
+Current repairs should use the GitHub package with the explicit Python patch above. The earlier environment-only helper below predates that successful workaround and omits the Python pin; its Streamlit-only repair is not the environment that opened successfully. Its diagnostic reports remain historical evidence.
 
 Open the **Samvaad 360 - Private Cloud Environment Repair** terminal that the developer launched. Enter the password and MFA code only in that terminal. Credentials from the earlier setup were not saved. After **Package diagnostics saved**, leave the terminal open and inform the developer. Its authenticated connection closes after repair, exit or 15 minutes of waiting after diagnostics.
 

@@ -3,6 +3,10 @@ name: Diagnose Snowflake hosted runtime
 on:
   workflow_dispatch:
     inputs:
+      repair_main_live:
+        description: 'Restore only a missing main-app live copy from its committed version'
+        type: boolean
+        default: false
       publish_pinned_check:
         description: 'Publish a separate check app with the catalog-verified Python patch version'
         type: boolean
@@ -36,6 +40,9 @@ jobs:
           use-oidc: true
       - name: Inspect package metadata and temporary runtime functions
         run: python -m scripts.diagnose_github_runtime
+      - name: Restore the main-app live copy if unavailable
+        if: inputs.repair_main_live
+        run: python -m scripts.ensure_github_live_version
       - name: Publish the separate pinned-runtime check
         if: inputs.publish_pinned_check
         run: |

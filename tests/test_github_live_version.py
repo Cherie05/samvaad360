@@ -27,14 +27,15 @@ def test_existing_live_edits_are_preserved_without_commit_abort_or_recreate():
     assert len(calls) == 2 and calls[1].startswith("GET ")
 
 
-def test_only_known_missing_version_error_allows_recovery():
+@pytest.mark.parametrize("missing_code", ["099108", "099112"])
+def test_only_known_missing_version_error_allows_recovery(missing_code):
     calls = []
     def execute(sql):
         calls.append(sql)
         if sql.startswith("SELECT"):
             return IDENTITY
         if len(calls) == 2:
-            return {"ok": False, "codes": ["099108"]}
+            return {"ok": False, "codes": [missing_code]}
         return {"ok": True, "rows": []}
     assert ensure("TESTORG-ACCOUNT", CONFIG, execute)["created"]
     assert calls[2] == 'ALTER STREAMLIT "TEST_DB"."APP"."SAMVAAD360" ADD LIVE VERSION FROM LAST'
