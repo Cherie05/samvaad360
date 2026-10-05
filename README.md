@@ -100,3 +100,7 @@ For a standard Snowflake trial, keep production action/consent/session state in 
 The [self-hosted telecalling plan](docs/telecalling-plan.md) specifies Asterisk ARI, a durable worker, local Whisper recognition, a stock neural voice, human handoff and a licensed SIP trunk. Parler Mini v1 is the provisional production voice candidate. Its complete tokenizer/codec/runtime bundle still needs a pinned license review and target-hardware benchmark; the installed Windows voice is only the local lab provider. See the [voice license review](docs/voice-license-review.md) and [deployment scaffold](infra/voice/README.md).
 
 Production identity, PBX integration, carrier delivery, Hindi/accent quality checks, full Snowflake/Cortex application integration, and real CoCo execution remain pending. Insurance claims are an additional domain; this release implements the lender PRD. The [original build plan](output/Samvaad360_Build_Plan.md) records hackathon fit and published timing; local operation alone does not establish Snowflake/CoCo eligibility.
+# GitHub deployment
+
+Source and deployment workflow: [private repository](https://github.com/Cherie05/samvaad360). See [the GitHub deployment guide](docs/github-deployment.md) for one-time Snowflake OIDC setup and subsequent releases. Hosted app startup still needs its own verification after deployment.
+

@@ -39,9 +39,10 @@ def safe_error(error):
             "sqlstate": getattr(error, "sqlstate", None)}
 
 
-def resolve(cursor, streamlit_version=None, snowpark_version=None, *, python_constraint="3.11.*"):
-    values = ["python==" + python_constraint,
-              "streamlit" + ("==" + streamlit_version if streamlit_version else ""),
+def resolve(cursor, streamlit_version=None, snowpark_version=None):
+    # Python is the first runtime argument, not an explicit PACKAGES entry.
+    # Supplying python in PACKAGES is rejected and is not a SiS startup test.
+    values = ["streamlit" + ("==" + streamlit_version if streamlit_version else ""),
               "snowflake-snowpark-python" + ("==" + snowpark_version if snowpark_version else "")]
     specification = "(" + ", ".join("'" + value + "'" for value in values) + ")"
     try:
@@ -73,13 +74,12 @@ def diagnose(connection, config, *, account, user):
         metadata = [{k: row[k] for k in metadata_fields if k in row} for row in app]
         cursor.execute(f"SELECT COUNT(*) FROM {config.object('CORE', 'CUSTOMER_360')}")
         customers = cursor.fetchone()[0]
-        original = resolve(cursor, "1.52.2", python_constraint="3.11")
-        corrected_python = resolve(cursor, "1.52.2")
+        original = resolve(cursor, "1.52.2")
         default = resolve(cursor)
         return {"status": "DIAGNOSED_WAITING_FOR_ENVIRONMENT_SELECTION", "account": actual_account,
                 "user": actual_user, "role": role, "region": region, "app": metadata,
-                "catalog": versions, "original_packages": original,
-                "python_patch_range_packages": corrected_python, "unpinned_packages": default,
+                "catalog": versions, "original_packages": original, "unpinned_packages": default,
+                "resolver_scope": "Python 3.11 libraries only; does not verify the hosted app runtime",
                 "customer_count": customers, "hosted_browser_verified": False,
                 "production_ready": False, "credentials_saved": False}
 
@@ -118,8 +118,8 @@ def repair(connection, config, folder, command, report):
         if not original.is_file():
             raise CloudError("ENVIRONMENT_BACKUP_FAILED", "The live environment was not backed up; it was not overwritten.")
         target = folder / "environment.yml"
-        target.write_text("name: samvaad-hackathon\nchannels:\n  - snowflake\ndependencies:\n  - python=3.11.*\n"
-                          f"  - streamlit={st_version}\n  - snowflake-snowpark-python={sp_version}\n", encoding="utf-8")
+        target.write_text("name: samvaad-hackathon\nchannels:\n  - snowflake\ndependencies:\n"
+                          f"  - streamlit={st_version}\n", encoding="utf-8")
         cursor.execute(f"PUT '{target.as_uri()}' '{app_uri}' AUTO_COMPRESS=FALSE OVERWRITE=TRUE")
         verification = folder / "after"
         verification.mkdir(exist_ok=True)
@@ -133,12 +133,12 @@ def repair(connection, config, folder, command, report):
             raise CloudError("CUSTOMER_COUNT_CHANGED", "Customer counts changed during the repair; inspect concurrent cloud work.")
         return {**report, "status": "ENVIRONMENT_REPAIRED_HOSTED_CHECK_PENDING", "selected_packages": resolved,
                 "streamlit_version": st_version, "snowpark_version": sp_version,
-                "python_constraint": "3.11.*", "environment_readback_verified": True,
+                "runtime_dependencies": "Snowflake preinstalled Python/Snowpark", "environment_readback_verified": True,
                 "environment_before_sha256": hashlib.sha256(original.read_bytes()).hexdigest(),
                 "environment_after_sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
                 "live_version_present": bool(uploaded and uploaded[0].get("live_version_location_uri")),
                 "changed_files": ["environment.yml"], "customer_data_reloaded": False,
-                "next": "Refresh the hosted app in Snowsight, then verify its four tabs."}
+                "next": "Refresh the hosted app in Snowsight, then verify its four tabs. Resolver versions do not establish hosted runtime versions."}
 
 
 def main(argv=None):

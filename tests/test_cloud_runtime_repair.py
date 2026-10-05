@@ -24,7 +24,7 @@ def test_resolver_uses_bound_values_and_only_reports_classified_errors():
     class Cursor:
         def execute(self, query, params):
             assert query == "SELECT SYSTEM$RESOLVE_PYTHON_PACKAGES(%s, %s)"
-            assert params == ("3.11", "('python==3.11.*', 'streamlit==1.52.2', 'snowflake-snowpark-python==1.43.0')")
+            assert params == ("3.11", "('streamlit==1.52.2', 'snowflake-snowpark-python==1.43.0')")
             raise RuntimeError("packages failed; private-token")
     result = resolve(Cursor(), "1.52.2", "1.43.0")
     assert not result["ok"] and result["error"]["category"] == "PACKAGE_RESOLUTION_FAILED"
@@ -90,8 +90,9 @@ def test_repair_preserves_object_and_data_and_pins_resolved_versions(tmp_path):
     assert result["status"] == "ENVIRONMENT_REPAIRED_HOSTED_CHECK_PENDING"
     assert result["changed_files"] == ["environment.yml"] and not result["customer_data_reloaded"]
     assert (tmp_path / "before/environment.yml").read_text() == "original environment\n"
-    assert "snowflake-snowpark-python=1.43.0" in (tmp_path / "environment.yml").read_text()
-    assert "python=3.11.*" in (tmp_path / "environment.yml").read_text()
+    assert "streamlit=1.52.2" in (tmp_path / "environment.yml").read_text()
+    assert "snowflake-snowpark-python=" not in (tmp_path / "environment.yml").read_text()
+    assert "python=" not in (tmp_path / "environment.yml").read_text()
     assert result["environment_readback_verified"]
     assert any(query.startswith("GET ") for query in cursor.queries)
     assert any(query.startswith("PUT ") for query in cursor.queries)
@@ -123,7 +124,7 @@ def test_windows_download_destination_does_not_have_drive_prefix_slash(tmp_path)
         assert value.startswith("file:///")
 
 
-def test_diagnostic_probes_the_exact_original_python_constraint(tmp_path):
+def test_diagnostic_does_not_misuse_python_as_a_udf_package(tmp_path):
     cursor = Cursor(tmp_path)
     original_execute = cursor.execute
     constraints = []
@@ -133,5 +134,5 @@ def test_diagnostic_probes_the_exact_original_python_constraint(tmp_path):
         return original_execute(query, params)
     cursor.execute = recording
     diagnose(SimpleNamespace(cursor=lambda: cursor), CloudConfig("test", "TEST_DB", "TEST_XS"), account="TESTORG-ACCOUNT", user="OWNER")
-    assert constraints[0] == "('python==3.11', 'streamlit==1.52.2', 'snowflake-snowpark-python')"
-    assert constraints[1] == "('python==3.11.*', 'streamlit==1.52.2', 'snowflake-snowpark-python')"
+    assert constraints[0] == "('streamlit==1.52.2', 'snowflake-snowpark-python')"
+    assert constraints[1] == "('streamlit', 'snowflake-snowpark-python')"
