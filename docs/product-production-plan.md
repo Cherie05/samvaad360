@@ -1,6 +1,6 @@
 # Samvaad 360 product and production plan
 
-Prepared **6 October 2026, IST**. The live prototype is [samvaad360.streamlit.app](https://samvaad360.streamlit.app/); its source is [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). This plan describes the product direction and release checks. A planned feature becomes an implemented feature only after its code, tests and hosted workflow are verified in [build status](../BUILD_STATUS.md).
+Updated **6 October 2026, IST**. The redesigned prototype is live at [samvaad360.streamlit.app](https://samvaad360.streamlit.app/); its source is [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). The release passed **11 independent hosted-browser checks**, using the live Snowflake source and 20 fictional customers. [GitHub run 37365585311](https://github.com/Cherie05/samvaad360/actions/runs/37365585311) passed tests and deployment for source `0d78eb7d7d0d355e933d2bf31955dc2deb569eca`. This document separates that shipped prototype from the production work still required. See [build status](../BUILD_STATUS.md) for release evidence.
 
 ## Product focus
 
@@ -21,6 +21,8 @@ The owner's participant portal lists **6 October 2026, 11:59 PM IST** as its sub
 | Public frontend and backend | Streamlit/Python in `public_app/streamlit_app.py`, hosted on Community Cloud | The Python process renders the UI and runs the domain service; a separate REST server is not required for this prototype. |
 | Public database connection | Dedicated Snowflake service-key reader; four fictional snapshot tables in `SAMVAAD_STAGING.PUBLIC_DEMO` | Fixed bound read queries; 20 fictional customers. The public identity cannot save staff approvals or change financial terms. |
 | Public review state | Browser-visit Streamlit session state | A simulated review belongs to that visit. It is not a durable staff decision or a Snowflake ledger write. |
+| Public Call studio | Bounded visit-local conversations with permission/fictional identity gates, borrower replies, outcome export and hardship/opt-out adaptation | A current approved simulation review is required. Browser speech controls are optional; actual audible playback was not established by the browser checks. No microphone capture, telephone call or database write is represented. |
+| Scenario comparison | New context is evaluated on a copy of the customer view using the shared decision rules | Before/after results are reversible simulations. They do not overwrite the shared Snowflake customer or payment records. |
 | Evidence and recommendations | Shared Python rules and evidence summaries in `samvaad/` | Illustrative policy scores and affordability checks, rather than validated churn probabilities or real credit decisions. Public answers do not invoke Cortex. |
 | Private operator demonstration | Separate Streamlit app inside Snowflake; Snowpark-backed reads and demo review records | Owner-authenticated demo reviews persist in Snowflake. This is separate from public session state and from the full production operational service. |
 | Local staff application and API | Streamlit staff UI, FastAPI integration endpoints and transactional SQLite demo state | Development identities and synthetic data; the full operational cloud repository remains pending. |
@@ -28,31 +30,31 @@ The owner's participant portal lists **6 October 2026, 11:59 PM IST** as its sub
 
 If Snowflake is unavailable, the public app can use its checked fictional bundle and displays the actual source. Backup results must not be presented as live Snowflake or Cortex responses. Free website hosting does not make database queries or future phone calls free. Trial expiry can suspend Snowflake even when a balance remains. [Snowflake trial conditions](https://docs.snowflake.com/en/user-guide/admin-trial-account)
 
-## Improved prototype experience
+## Shipped prototype experience
 
-The redesign should expose the workflow in a clear order:
+Five workspaces now expose the workflow:
 
-1. **Officer dashboard:** readable portfolio counts, a prioritised case queue and guided examples for hardship, retention, top-up and contact suppression. Show what the counts measure; do not present estimated revenue as recovered revenue.
-2. **Customer workspace:** customer summary, outstanding amount, payment history and a timeline of messages. Put the next action, reviewer and supporting evidence together. Use readable offer fields and status labels instead of raw JSON.
-3. **Review simulation:** an explicit decision and note, with pending/completed states. Keep anonymous decisions isolated between visitors and clearly distinguish them from real staff approvals.
-4. **Conversation studio:** start a fictional dialogue, show borrower/assistant turns, and demonstrate callback, refusal, hardship and opt-out. Show the input/output mode. A browser conversation or audio preview must not be labelled a telephone call.
-5. **Decision adaptation:** display the new evidence, previous recommendation and resulting policy response together. Export a fictional transcript and outcome for the demo.
+1. **Command center:** portfolio counts, a prioritised case queue and guided hardship, retention, top-up and contact-restriction examples. Counts describe the fictional portfolio; estimated interest differences are illustrative, not recovered revenue.
+2. **Customer 360:** customer summary, repayment facts, interaction timeline, readable action/offer fields and policy checks. A before/after scenario comparison shows how new context changes the recommendation.
+3. **Evidence desk:** scoped customer questions and source excerpts supporting deterministic answers and recommendations. Public answers do not trigger a Cortex request.
+4. **Review queue:** pending/completed simulated reviews with a decision, note and export. Anonymous decisions remain isolated between visits and are distinct from real staff approvals.
+5. **Call studio:** a fictional borrower/lender conversation with permission and account-holder confirmation, typed or suggested replies, optional click-to-play browser speech, opt-out and officer-handoff outcomes. New hardship stops an earlier growth invitation, exposes the added evidence and revised decision, and puts further contact on hold for that visit. A conversation record can be exported.
 
-Use consistent navigation, visible primary actions, short empty-state instructions, legible contrast, keyboard-operable controls and a layout that works on mobile. Keep the data-source status visible. Explain limits beside decisions where they affect the visitor's choices.
+The redesigned forest/off-white interface uses readable cards, status labels, clear primary actions, empty-state guidance and a mobile layout. The current release passed hosted workflow and mobile checks. Browser voice controls and text fallback were inspected; audible playback, speech quality and assistive-technology coverage still require their own checks.
 
-The public conversation implementation must preserve the reader's permissions: new utterances and demonstration outcomes stay in the visitor's simulation. They must not update the shared fictional snapshots or another visitor's review. Hosted verification must show which redesign features actually shipped.
+New utterances and demonstration outcomes stay in the visitor's simulation. The public reader cannot update the shared fictional snapshots or another visitor's review. A browser conversation and its optional speech preview are a rehearsal: no real telephone call, delivered invitation or financial change occurs.
 
 ## A strong judge journey
 
-**Kabir C0007: a recommendation that adapts.** Start with his overdue-payment facts and gentle reminder. Add the fictional borrower statement, "I lost my job and cannot pay my EMI. Please help." Show the new cited interaction and the policy switch to supportive hardship contact. His existing overdue status matters: the current hardship action requires both hardship evidence and DPD between 1 and 60. No payment break or changed loan terms are promised.
+**Kabir C0007: a recommendation that adapts.** In Customer 360, start with his overdue-payment facts and gentle reminder. Choose the new-hardship scenario and compare the actions, or use the statement "I lost my job and cannot pay my EMI. Please help" in a reviewed Call studio rehearsal. Show the new fictional interaction and the policy switch to supportive hardship contact. His existing overdue status matters: the current hardship action requires both hardship evidence and DPD between 1 and 60. The comparison and call outcome remain visit-local; no payment break or changed loan terms are promised.
 
 **Imran C0003: growth that stops when circumstances change.** Inspect his repayment history and top-up-interest evidence, then review the conditional invitation in the simulation. During the conversation introduce new repayment hardship. Stop the growth invitation and record an officer-review/callback outcome. His DPD is zero, so the existing engine must not invent a hardship-action recommendation whose overdue-payment condition is unmet. Show the actual resulting policy decision.
 
 **Neha C0004: consent wins over opportunity.** Show the contact restriction and blocked action. In a permitted fictional conversation, demonstrate that an opt-out ends contact and prevents later simulated contact for that visit.
 
-These cases establish traceable behaviour; they do not prove real-world churn reduction, revenue uplift or underwriting quality. Any conversation path described above must pass the release checks before appearing in the submitted demonstration.
+These implemented cases establish traceable synthetic behaviour; they do not prove real-world churn reduction, revenue uplift or underwriting quality. The hosted release verified that new hardship closes an earlier growth conversation and blocks its continuation. Real borrower authentication and live telephone delivery are separate production gates.
 
-The supplied portal additionally requires a **3–5 minute video**, one working CoCo CLI workflow with **Input → Processing → Output**, and **2–3 modular capabilities**, plus the organizer-template PDF under 5 MB. Prepared `.cortex/` skills are available, but actual account/skill/hook execution must be demonstrated. A successful Cortex SQL connection test is separate evidence. Show evidence inspection, recommendation generation and an explicitly approved simulated execution; never let the assistant approve its own financial proposal. [CoCo CLI documentation](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-cli)
+The supplied portal additionally requires a **3–5 minute video**, one working CoCo CLI workflow with **Input → Processing → Output**, and **2–3 modular capabilities**, plus the organizer-template PDF under 5 MB. Local CoCo 1.1.87 and discovery of all three `.cortex/` project skills are verified. Actual account/model access, skill invocation and hook execution remain unverified, and the recording and PDF remain pending. A successful Cortex SQL connection test is separate evidence. Show evidence inspection, recommendation generation and an explicitly approved simulated execution; never let the assistant approve its own financial proposal. These prepared skills target the local operational demo; a public simulated review does not approve a local CLI action. [CoCo CLI documentation](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-cli)
 
 ## Recommended production architecture
 
@@ -93,7 +95,7 @@ Derive staff roles from trusted login: agent, manager, credit reviewer, tenant a
 
 | Phase | Deliverable | Required release evidence |
 | --- | --- | --- |
-| 0 — Public prototype refresh | Officer workbench, readable journey/evidence, conversation demonstration and decision adaptation, deployed from reviewed GitHub source | Relevant automated checks pass; fresh anonymous desktop/mobile browser verifies the hosted features, actual data source, visitor isolation, DND and hardship/growth rules. Record the deployed commit. |
+| 0 — Public prototype refresh | Shipped officer workbench, readable journey/evidence, Call studio rehearsal and policy adaptation | **Verified:** 11 hosted-browser checks, live Snowflake source, 20 fictional customers and successful test/deployment run for `0d78eb7`. Browser speech controls/text fallback are present; audible playback is not verified. Real calls and database writes remain disabled. |
 | 1 — Operational cloud staging | PostgreSQL repository, FastAPI contracts, versioned approvals/consent and transactional outbox | Concurrent approval/claim tests, stale-consent denial, replay/conflict handling, crash/retry recovery and data reconciliation against the existing synthetic domain behaviour. |
 | 2 — Trusted staff pilot | Login, server-derived roles, tenant/customer scopes, secret management and audit access | Wrong-role and cross-customer/tenant tests fail safely; authenticated exports are scoped; secrets rotate; HTTPS, request limits, backup restoration and deletion are rehearsed. |
 | 3 — Scoped analytics and AI | Ingested interactions/outcomes, grounded Cortex enrichment and evidence answers | Confirm source lineage, borrower/assistant speaker separation, customer isolation, answer-quality evaluation, bounded query/model use and visible stale/unavailable-data behaviour. |
@@ -105,6 +107,8 @@ No phase authorizes an assistant to negotiate unreviewed terms, disburse a loan 
 
 ## What real automated calling requires
 
+The current public Call studio uses the visitor's browser speech API for optional lender playback and typed/suggested borrower replies. It does not deploy self-hosted ASR/TTS or connect to a SIP network. Browser/OS voices are selected by the visitor, and their available voices and playback behaviour vary. The separately tested local Windows/Whisper lab is not the public site's audio backend.
+
 The conversation controller should check consent and the approved action before dialing and again when circumstances change. Disclose the automated assistant, apply the approved recording policy, authenticate the borrower before revealing account details, confirm recognized amounts/dates and offer a person when uncertain. Persist opt-outs and cancel affected jobs; record a callback request without claiming a call was scheduled or a transfer completed before provider confirmation.
 
 Asterisk ARI provides call/media control and asynchronous events. Place it behind the application server; it should not be directly accessed from a staff web page. The adapter must implement the media transport and event reconciliation for the selected deployed version. [Asterisk ARI architecture and production practices](https://docs.asterisk.org/Configuration/Interfaces/Asterisk-REST-Interface-ARI/)
@@ -115,6 +119,6 @@ Owning the software does not supply a carrier connection, calling number, recipi
 
 ## Current release boundary
 
-The deployed website is a fictional lender prototype with genuine restricted Snowflake reads and visit-local simulations. The separate operator demonstration persists demo reviews in Snowflake; the local voice lab persists synthetic conversations in SQLite. These are three different state boundaries.
+The redesigned website is a fictional lender prototype with genuine restricted Snowflake reads, five working workspaces, a priority queue, evidence/scenario comparisons and visit-local review/conversation simulations. New conversation evidence can stop a growth proposal and show the policy response for that visit. The separate operator demonstration persists demo reviews in Snowflake; the local voice lab persists synthetic conversations in SQLite. These are three different state boundaries.
 
-Production PostgreSQL workers, trusted multi-tenant identities, live carrier calling, production voice assets and validated credit/churn models remain planned until their release evidence exists. The redesign deployment and tests should update [build status](../BUILD_STATUS.md), [public deployment](public-website-deployment.md) and [submission fields](hackathon-submission.md) with their actual results.
+Production PostgreSQL workers, trusted multi-tenant identities, live carrier calling, production voice assets and validated credit/churn models remain planned until their release evidence exists. Actual CoCo authentication/execution, the required recording, the organizer-template PDF and final participant-portal submission also remain pending. Future releases should retain their actual results in [build status](../BUILD_STATUS.md), [public deployment](public-website-deployment.md) and [submission fields](hackathon-submission.md).

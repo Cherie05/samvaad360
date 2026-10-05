@@ -2,7 +2,7 @@
 
 The public lender prototype uses Streamlit Community Cloud for its browser UI and Python backend, and this hackathon account for live analytical reads. Community Cloud hosting is free; Snowflake warehouse queries consume account credits. The existing private Snowsight app remains the operator demonstration.
 
-**Verified public website:** [samvaad360.streamlit.app](https://samvaad360.streamlit.app/). **Public source:** [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). On 5 October 2026, all six checks passed in fresh anonymous browser contexts with the live Snowflake source, evidence answers, isolated review workflow and mobile layout. GitHub passed 239 tests and deployed the private operator app. The deployment steps below also serve as recovery instructions.
+**Verified public website:** [samvaad360.streamlit.app](https://samvaad360.streamlit.app/). **Public source:** [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). On 6 October 2026 IST, all 11 checks passed in fresh anonymous browser contexts with the live Snowflake source and redesigned five-workspace UI. [GitHub passed 283 tests and deployed the private operator app](https://github.com/Cherie05/samvaad360/actions/runs/37365585311), source commit `0d78eb7`. The deployment steps below also serve as recovery instructions.
 
 | Component | Public deployment |
 | --- | --- |
@@ -12,6 +12,8 @@ The public lender prototype uses Streamlit Community Cloud for its browser UI an
 | Permissions | `SAMVAAD_PUBLIC_READONLY`: database/schema/warehouse usage and SELECT on four approved fictional snapshots |
 | Customer journeys | 20 fictional customers; hardship, retention, top-up and DND examples |
 | Public review workflow | Per-visit simulation, without database writes or staff identity |
+| Decision workbench | Portfolio priorities, readable policy checks, omnichannel evidence and what-if changes using the actual lending rules |
+| Call studio | Review-gated browser conversation, click-to-play voice controls, typed replies, evidence-driven policy changes and downloadable transcript; no carrier dialing |
 | Evidence answers | Deterministic summaries with transcript citations; no public Cortex calls |
 | Backup when the trial is unavailable | Checked fictional JSON bundle, prominently labelled offline; never described as a live Snowflake response |
 
@@ -38,13 +40,15 @@ The public adapter admits seven fixed, bounded read queries: four customer-scope
 
 5. Paste with **Ctrl+V only into the Secrets box**, click **Save**, then **Deploy**. Keep this credential out of chat, source control, screenshots and submission artifacts. It is a dedicated reader key; the website does not need the owner's password or MFA code.
 6. For a private source repository, open the app's **Settings > Sharing > Who can view this app** and choose **This app is public and searchable**. Website visibility and repository visibility are separate settings.
-7. Copy the actual assigned `https://...streamlit.app` URL. An optional subdomain is a suggestion until deployment confirms it. Open the link in an incognito window and confirm the sidebar says **Data source: Snowflake** and the four tabs appear.
+7. Copy the actual assigned `https://...streamlit.app` URL. An optional subdomain is a suggestion until deployment confirms it. Open the link in an incognito window and confirm the sidebar says **Data source: Snowflake** and five workspaces appear: Command center, Customer 360, Evidence desk, Review queue and Call studio.
 
 If the sidebar says **offline synthetic snapshot**, the website is functioning in backup mode; live Snowflake connectivity has not passed for that hosting instance. Check its private logs/settings rather than presenting the fallback as a cloud database result.
 
 ## Verification and ongoing updates
 
-The local and GitHub gates passed 239 tests. Real service-key authentication retrieved 20 customers and verified the four hero decisions. Six browser checks passed against localhost, then against the public host, with actual Snowflake reads: four tabs, top-up review simulation, visitor isolation, evidence scope, DND restriction and mobile layout.
+The local and GitHub gates passed 283 tests (37.32 and 40.53 seconds respectively). Real service-key authentication retrieved 20 customers and verified portfolio assembly in four bounded reads. Eleven browser checks passed against localhost, then against the public host, with actual Snowflake reads: five workspaces, readable policy/evidence, review gates, voice controls/text fallback, conditional-negotiation refusal, hardship decision changes, visitor isolation, evidence scope, what-if rules, DND restriction and mobile layout. Eight desktop/mobile screenshots were inspected. Browser audio audibility is unverified; control behavior and text conversation are verified.
+
+For a distinctive demo, choose Imran, request and approve a simulation review, then start Call studio. Complete permission and fictional identity checks before submitting `I lost my job`. His conditional top-up stops, the actual quote appears as new evidence, and the conversation ends with human handoff. Separately, Kabir's job-loss what-if changes his reminder to hardship support. Neither demonstration changes saved financial data or claims a validated churn prediction.
 
 After deployment, run this independent check with the actual URL:
 
@@ -60,6 +64,6 @@ Community Cloud redeploys source changes from GitHub. Dependencies are pinned in
 
 The participant portal supplied by the owner lists **6 October 2026, 11:59 PM IST** as the submission deadline. It requires a public source repository, deployed URL, brief, CoCo CLI video and organizer-template PDF deck. Publishing the website does not automatically make the source public or supply the CoCo/video/deck evidence.
 
-This is a synthetic hackathon prototype. Trusted production identities, transactional operational storage, live telephony and validated financial models remain separate work in [production readiness](production-readiness.md).
+This is a synthetic hackathon prototype. Browser speech uses the visitor's installed browser/OS provider and distributes no voice model; provider terms and availability still vary. Trusted production identities, transactional operational storage, durable contact preferences, live telephony and validated financial models remain work in [the product production plan](product-production-plan.md) and [production readiness](production-readiness.md).
 
 Official references: [free Community Cloud hosting](https://docs.streamlit.io/deploy/streamlit-community-cloud), [deployment fields and Python version](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy), [hosting Secrets](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/secrets-management), [public sharing](https://docs.streamlit.io/deploy/streamlit-community-cloud/share-your-app).
