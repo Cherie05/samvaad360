@@ -12,7 +12,7 @@ The separate Snowflake-hosted demo is packaged for `ZYLTUKM-HU63768` / `ARUNVPP2
 
 It provisions a scoped role, X-Small warehouse, five-credit daily warehouse monitor, synthetic analytical data and a private warehouse-runtime Streamlit website. Its Python/Snowpark backend saves demo reviews to Snowflake. Cortex answers are optional and bounded; financial execution and telephone audio remain separate. Omitting `--apply` only regenerates the offline package.
 
-The owner completed private login and the demo is published, but opening **SAMVAAD360** produced a package compilation error that persists after simplifying its environment. [GitHub deployment](docs/github-deployment.md) now passes its 210-test suite and temporary Snowflake login; it published **SAMVAAD_RUNTIME_CHECK** and confirmed the 20-customer count. The owner opened that default-environment diagnostic and reported **`Packages not found: python==3.11`**. Runtime diagnosis is in progress; the hosted website is not working yet. Live model checks remain pending; setup preserves an existing app instead of silently replacing it. See the [end-to-end hackathon guide](docs/hackathon-cloud-setup.md), [startup repair](docs/cloud-startup-repair.md) and [runtime advisory review](docs/cloud-runtime-advisories.md). CoCo 1.1.87 is installed; account/model and project skill/hook verification remains pending. The older supported warehouse Streamlit version retains two upstream advisories with documented scope; the patched local runtime's clean scan does not cover that cloud version. Production remains blocked as described in [readiness](docs/production-readiness.md).
+The private [GitHub deployment](docs/github-deployment.md) passes **218 tests**, authenticates with a temporary Snowflake identity, updates **SAMVAAD360**, and verifies its live files and 20-customer count. The owner confirms all four main tabs load, a review request saves and its reviewer note appears. Explicit Python 3.11.15, Streamlit 1.52.2 and Snowpark 1.55.0 pins fixed hosted startup in this account. Select role **SAMVAAD_HACKATHON**, then **Projects > Streamlit > SAMVAAD360**. One synthetic Cortex model request returned `OK`; customer-answer quality and CoCo account/model/skill/hook execution remain unverified. See the [end-to-end hackathon guide](docs/hackathon-cloud-setup.md), [startup repair](docs/cloud-startup-repair.md) and [runtime advisory review](docs/cloud-runtime-advisories.md). The older supported warehouse Streamlit version retains two upstream advisories with documented scope; the patched local runtime's clean scan does not cover that cloud version. Production remains blocked as described in [readiness](docs/production-readiness.md).
 
 ## Frontend, backend and database
 
@@ -25,7 +25,10 @@ The owner completed private login and the demo is published, but opening **SAMVA
 | Voice conversation engine | Persisted permission/identity/dialogue states | `samvaad/voice.py` |
 | Local audio | Installed Windows SAPI voice; faster-whisper CPU INT8 recognition | `samvaad/voice_audio.py`; pinned model in `.local/models/whisper-base` |
 | Automation | Python CLI and prepared CoCo skills/hook | `tools/cli.py`, `.cortex/`; actual CoCo runtime remains unverified |
-| Cloud analytical demo | Snowflake connector, schema/views, bounded Cortex jobs and fixture importer | `cloud/`, `scripts/cloud_*.py`; synthetic data loaded in `SAMVAAD_STAGING`; model calls unverified |
+| Cloud analytical demo | Snowflake connector, schema/views, bounded Cortex jobs and fixture importer | `cloud/`, `scripts/cloud_*.py`; synthetic data loaded in `SAMVAAD_STAGING`; model connection check passed |
+| Private cloud frontend | Streamlit 1.52.2 inside Snowsight | `cloud/demo_app/streamlit_app.py`; `SAMVAAD360` |
+| Private cloud backend | Python 3.11.15 domain engine and Snowpark 1.55.0 | `cloud/demo_app/demo_repository.py`; calls Snowflake from the hosted app |
+| Cloud database and demo reviews | Snowflake standard tables and Customer 360 views | `SAMVAAD_STAGING`, with RAW, CORE, AI and APP schemas |
 
 Streamlit calls the shared Python service directly. FastAPI exposes the same domain rules for integrations and invitation pages. The UI does not require an HTTP request for each screen.
 
@@ -74,7 +77,7 @@ The operator selector simulates identities on this laptop; production login is p
 .\.venv\Scripts\python.exe -m tools.cli check
 ```
 
-The suite currently contains 175 tests, including twelve Streamlit AppTests. Tests use isolated temporary databases. The actual API/audio and browser rehearsals below deliberately change the interactive synthetic demo and need fresh approved actions:
+The latest GitHub full suite passes 218 tests, including local UI, cloud-port and deployment guards. Tests use isolated temporary databases. The actual API/audio and browser rehearsals below deliberately change the interactive synthetic demo and need fresh approved actions:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/voice_runtime_check.py --confirm TEST-LOCAL-DEMO
@@ -91,9 +94,9 @@ Reset removes actions, invitations, audit events and voice sessions, then reseed
 
 ## Cloud and automated telecalling
 
-The [cloud setup guide](docs/cloud-setup.md) includes offline doctor/export/deploy/load/enrichment commands and reviewed SQL plans. The connector is installed, but no connection or CoCo executable is configured. These assets do not implement the application's full cloud repository or deploy the website.
+The [cloud setup guide](docs/cloud-setup.md) includes doctor/export/deploy/load/enrichment commands and reviewed SQL plans. The connector and CoCo executable are installed; the `samvaad_hackathon` connection stores metadata without a password. The separate hosted demo is working, while the local application's full operational cloud repository remains unimplemented.
 
-The [production readiness audit](docs/production-readiness.md) records the verified local fixes and remaining release blockers. Production is not ready. The next step is synthetic-data staging: follow the [dashboard and local connection setup guide](docs/cloud-staging-handoff.md). The setup helper stores metadata only; native password and optional MFA code are entered privately in the terminal, not saved or sent through chat. Current Snowflake hosting/version and trial AI/network restrictions need an account check before deploying the application.
+The [production readiness audit](docs/production-readiness.md) records verified fixes and remaining release blockers. Production is not ready. Synthetic Snowflake staging is deployed and its startup is verified by the owner. The setup helper stores metadata only; native password and MFA are entered privately during owner setup. Subsequent GitHub releases use OIDC. Current trial expiry/credit entitlements still need an account check.
 
 For a standard Snowflake trial, keep production action/consent/session state in PostgreSQL and use Snowflake for Customer 360/Cortex analytics. Standard Snowflake table keys are unenforced and hybrid tables are unavailable in standard trials. The PostgreSQL adapter remains to be implemented. Standard trial credits also do not establish CoCo access; verify a paid or dedicated CoCo trial account.
 
@@ -102,5 +105,5 @@ The [self-hosted telecalling plan](docs/telecalling-plan.md) specifies Asterisk 
 Production identity, PBX integration, carrier delivery, Hindi/accent quality checks, full Snowflake/Cortex application integration, and real CoCo execution remain pending. Insurance claims are an additional domain; this release implements the lender PRD. The [original build plan](output/Samvaad360_Build_Plan.md) records hackathon fit and published timing; local operation alone does not establish Snowflake/CoCo eligibility.
 # GitHub deployment
 
-Source and deployment workflow: [private repository](https://github.com/Cherie05/samvaad360). See [the GitHub deployment guide](docs/github-deployment.md) for one-time Snowflake OIDC setup and subsequent releases. Hosted app startup still needs its own verification after deployment.
+Source and deployment workflow: [private repository](https://github.com/Cherie05/samvaad360). See [the GitHub deployment guide](docs/github-deployment.md) for the completed Snowflake OIDC setup and subsequent releases. [The verified release](https://github.com/Cherie05/samvaad360/actions/runs/37338447835) passed 218 tests; the owner separately confirmed hosted startup. Ordinary code pushes to `main` test and deploy automatically.
 

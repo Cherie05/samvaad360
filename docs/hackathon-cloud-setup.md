@@ -1,16 +1,16 @@
 # Samvaad 360: new hackathon account to hosted demo
 
-Prepared 5 October 2026, IST, for account `ZYLTUKM-HU63768`, login `ARUNVPP24`. The owner confirms using the hackathon organizer's activation link. Its remaining credits, expiry, actual Cortex models and CoCo eligibility still require account-side checks; the account name alone does not verify those entitlements.
+Updated 5 October 2026, IST, for account `ZYLTUKM-HU63768`, login `ARUNVPP24`. The owner confirms using the organizer activation link. A bounded `llama3.3-70b` request succeeded; current credits/expiry and actual CoCo eligibility still require account-side checks.
 
-**Current execution:** private login succeeded, resources were created in AWS_AP_SOUTHEAST_7, the synthetic import reconciled, all six manifest files were uploaded and `SAMVAAD360` was published with a live version. `output/cloud/trial/result.json` records those stages. Start at **Step 4** for the hosted browser rehearsal. Do not rerun setup merely to open the published app. Current full suite: **199 passed**; warehouse-version offline contract checks: **24 passed**.
+**Current execution:** resources exist in AWS_AP_SOUTHEAST_7, the synthetic import reconciled, and the private `SAMVAAD360` app works. [The latest GitHub release](https://github.com/Cherie05/samvaad360/actions/runs/37338447835) passed **218 tests**, authenticated with OIDC, uploaded the app and verified 20 customers and live-file recovery. The owner confirms all four main tabs and the saved reviewer note. `output/cloud/trial/result.json` records current evidence alongside the historical initial release. Setup is completed; use **Step 4** for additional rehearsal and [GitHub deployment](github-deployment.md) for code updates.
 
-**Hosted startup update:** the owner subsequently reported a package compilation error. The hosted website is not working yet. Follow [the targeted startup repair](cloud-startup-repair.md); package/catalog diagnosis needs a fresh private login because setup did not save the password. Six additional repair guard checks pass; live package resolution and a refreshed hosted app remain required.
+**Hosted startup repair:** explicit Python 3.11.15, Streamlit 1.52.2 and Snowpark 1.55.0 pins resolved the original launcher failure for this app. See [the repair history](cloud-startup-repair.md). GitHub diagnosis uses the configured OIDC identity; another personal password prompt is not needed for that workflow.
 
 ## What will be hosted
 
 | Component | Hackathon cloud implementation |
 | --- | --- |
-| Website | Private Streamlit in Snowflake app `SAMVAAD_STAGING.APP.SAMVAAD360`, explicitly using warehouse runtime, Python 3.11 and Streamlit 1.52.2 |
+| Website | Private Streamlit in Snowflake app `SAMVAAD_STAGING.APP.SAMVAAD360`, warehouse runtime, Python 3.11.15, Streamlit 1.52.2 and Snowpark 1.55.0 |
 | Backend | Python/Snowpark in the same Snowflake-hosted app; bound queries reuse the tested lending rules |
 | Customer database | Snowflake RAW tables and CORE Customer 360/evidence views: 20 customers, 21 loans, 370 payments, 22 interactions, all fictional |
 | Review state | Persistent `APP.DEMO_REVIEWS` with current-consent/proposal rechecks; a single-operator synthetic demonstration |
@@ -93,6 +93,8 @@ The published DDL and reconciled rows do not by themselves prove hosted browser 
 
 ## Step 5: enable and verify bounded Cortex usage
 
+[The account capability check](https://github.com/Cherie05/samvaad360/actions/runs/37338451069) returned `OK` from the default model using a fixed synthetic prompt and 16-token output cap. It proves model access. The customer-scoped answer and batch enrichment below still need live quality checks.
+
 For an actual AI-backed answer, open **Ask with evidence**, check **Use Cortex AI for this answer**, and submit one customer question. The default model is `llama3.3-70b`; output is limited to 512 tokens, context is scoped/bounded, and the generated response is marked for review against its source excerpts. Only the submit event calls the model. It cannot alter approvals. The account must permit that model in its region or through already approved account settings. Do not enable cross-region processing merely to bypass a model error.
 
 For batch transcript intent/sentiment/entity extraction, start with five interactions:
@@ -138,5 +140,5 @@ Auto-resume lets the next app query start it again, so this is not a permanent s
 
 Offline preflight covers source/SQL packaging, credential boundaries, wrong-account refusal, existing-resource conflict refusal, viewer/customer scope, contact-policy rechecks, synthetic review persistence and app rendering. The warehouse-compatible app was exercised on **Streamlit 1.52.2** with a recording Snowpark test session. This does not test Snowflake SQL acceptance, hosted package resolution, hosted identity delivery or live AI output.
 
-Provisioning/import and the live app version are complete. Pending: hosted app inspection, actual Cortex/model calls, CoCo account authentication/skills/hooks, balance/expiry verification and participant-portal acceptance. Production remains blocked on independent approvers, customer/tenant permissions, transactional operational repository, public HTTPS/API workflows, durable execution/recovery, observability/backups, real policy/model validation and licensed production voice/media/carrier. See [production readiness](production-readiness.md) and [telecalling plan](telecalling-plan.md).
+Provisioning/import, GitHub deployment and main-app startup are complete. The owner reports four tabs and a saved reviewer note; one fixed-prompt Cortex connection request returned `OK`. Pending: exact approved-review status after a manual refresh, grounded Cortex answer/enrichment quality, CoCo account authentication/skills/hooks, balance/expiry verification and participant-portal acceptance. Production remains blocked on independent approvers, customer/tenant permissions, transactional operational storage, public HTTPS/API workflows, durable execution/recovery, observability/backups, real policy/model validation and licensed production voice/media/carrier. See [production readiness](production-readiness.md) and [telecalling plan](telecalling-plan.md).
 
