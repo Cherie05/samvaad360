@@ -2,10 +2,13 @@
 
 Updated 5 October 2026 IST. The local lender application and voice lab pass verification. The private Snowflake synthetic demo also opens: the owner confirmed all four tabs and supplied the saved review ID and reviewer note. One bounded Cortex connection request returned `OK`. Production, customer-answer quality and CoCo account/skills/hooks remain unfinished work.
 
+The new anonymous public website passes **239 local tests** and **six browser workflow checks** using actual Snowflake reads. Its dedicated service-key reader connects to four fictional snapshots in `SAMVAAD_STAGING.PUBLIC_DEMO` and verifies 20 customers. Hosting on Community Cloud and its public URL are pending the owner's Create app action; see [public deployment](docs/public-website-deployment.md). Website hosting is free; Snowflake queries consume credits. The source repository is still private. The owner's participant portal lists **6 October 2026, 11:59 PM IST** for submission; public source, deployed URL, CoCo video and organizer-template PDF are distinct deliverables.
+
 The private GitHub connection authenticates with short-lived OIDC tokens. [The latest main release](https://github.com/Cherie05/samvaad360/actions/runs/37338447835), source commit `57c0cd1`, passed **218 tests** and deployed successfully, including live-version recovery after commit and the 20-customer count. The blank `SAMVAAD_RUNTIME_CHECK` failed with **`Packages not found: python==3.11`**. Explicit Python 3.11.15, Streamlit 1.52.2 and Snowpark 1.55.0 pins opened the separate diagnostic and then the main app. This is a verified workaround; the upstream cause is unconfirmed. Snowflake now trusts this repository's exact immutable GitHub identity. See [startup repair](docs/cloud-startup-repair.md) and [GitHub deployment](docs/github-deployment.md).
 
 | Deliverable | State | Evidence |
 | --- | --- | --- |
+| Public anonymous website and restricted Snowflake backend | Locally verified; public hosting pending | 239 tests; real service-key/20-customer check; six browser checks; per-visitor simulated reviews |
 | PRD, lender architecture and hackathon review | Complete | `output/Samvaad360_Build_Plan.md` |
 | Local frontend, backend, API and SQLite | Complete | 20 customers; three seeded hero actions; five workspace tabs |
 | Offline signals, evidence answers and bounded NBA | Complete locally | Negation, borrower speech, dated facts, policy caps and citations |

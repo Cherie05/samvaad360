@@ -2,6 +2,10 @@
 
 A local lending Customer 360 and Next Best Action web application based on `Samvaad360_PRD.pdf`. It combines repayment facts with emails, chats and call transcripts, then routes an evidence-backed action to its designated reviewer. It now includes a working local voice lab with speech output, speech recognition and persisted conversations. Data, offers and contacts are synthetic; real phone calls are disabled.
 
+## Public website
+
+The anonymous website is prepared for free Streamlit Community Cloud hosting with a genuine Snowflake backend. Its dedicated reader retrieves 20 fictional customers from `SAMVAAD_STAGING.PUBLIC_DEMO`; public reviews simulate a workflow within each visit. The service connection, all 239 tests and six browser checks pass locally. Public hosting and its assigned URL still require the owner's Create app step. See [the exact deployment fields](docs/public-website-deployment.md). Snowflake queries use trial credits; hosting is free. A clearly labelled fictional backup keeps the demo browsable if the trial is unavailable.
+
 ## Hackathon cloud account setup
 
 The separate Snowflake-hosted demo is packaged for `ZYLTUKM-HU63768` / `ARUNVPP24`. Run this from the workspace in your own PowerShell terminal; enter password/MFA only in its hidden local prompts:
@@ -18,6 +22,8 @@ The private [GitHub deployment](docs/github-deployment.md) passes **218 tests**,
 
 | Part | Technology | Code / runtime |
 | --- | --- | --- |
+| Anonymous public frontend/backend | Streamlit 1.65.0, Python 3.11 and Snowflake Connector 4.8.0 | `public_app/`; Community Cloud deployment prepared |
+| Public analytical database | Read-only fictional snapshots in Snowflake | `SAMVAAD_STAGING.PUBLIC_DEMO`; dedicated service-key connection verified |
 | Staff browser frontend | Streamlit 1.65+ and local CSS/system fonts | `app/streamlit_app.py`, `app/voice_ui.py`; http://127.0.0.1:8501 |
 | Application backend | Python domain service, bounded rules and evidence answers | `samvaad/service.py`, `engine.py`, `signals.py`, `knowledge.py` |
 | REST API and customer invitation pages | FastAPI and Uvicorn | `webhook/main.py`, `voice_routes.py`; http://127.0.0.1:8000/docs |
