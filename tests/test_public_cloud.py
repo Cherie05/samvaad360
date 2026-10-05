@@ -9,6 +9,7 @@ from streamlit.testing.v1 import AppTest
 from cloud.config import CloudError, WORKSPACE
 from public_app import repository as public
 from scripts import setup_public_cloud as setup
+from samvaad.signals import extract_signals
 from test_trial_cloud import Session
 
 
@@ -33,6 +34,19 @@ class Connection:
                 if sql == public.IDENTITY_SQL:
                     self.description = [(k,) for k in connection.identity]
                     self.result = [list(connection.identity.values())]
+                elif sql in public.portfolio_reads():
+                    data = connection.session.data
+                    if '"LOANS"' in sql:
+                        rows = [{"PAYLOAD": json.dumps(l)} for l in data["loans"]]
+                    elif '"PAYMENTS"' in sql:
+                        rows = [{"PAYLOAD": json.dumps(p)} for p in data["payments"]]
+                    else:
+                        rows = [{"CUSTOMER_ID": i["customer_id"], "INTERACTION_ID": i["interaction_id"],
+                            "CHANNEL": i["channel"], "TS": i["ts"], "TEXT": i["text"],
+                            "EVIDENCE_TEXT": extract_signals(i["text"])["evidence_text"],
+                            "OFFLINE_SIGNALS": json.dumps(extract_signals(i["text"]))} for i in data["interactions"]]
+                    self.description = [(k,) for k in rows[0]]
+                    self.result = [list(row.values()) for row in rows]
                 else:
                     rows = connection.session.sql(sql, params or []).collect()
                     self.description = [(k,) for k in rows[0]] if rows else []
@@ -105,6 +119,17 @@ def test_public_reads_use_only_the_synthetic_snapshot_and_match_journeys(reader)
         reader.answer("C0003", "Why this action?", cortex=True)
     with pytest.raises(public.DemoError):
         reader.reviews()
+
+
+def test_public_portfolio_uses_four_bounded_reads_and_preserves_decisions(reader):
+    profiles = reader.portfolio_profiles()
+    calls = reader.session.connection.calls
+    assert len(profiles) == 20 and len(calls) == 4
+    assert all(q.startswith("SELECT") and '"PUBLIC_DEMO"' in q and "LIMIT" in q for q, _ in calls)
+    assert profiles[0]["decision"]["action_code"] == "HARDSHIP_RESTRUCTURE_CALL"
+    assert profiles[1]["decision"]["action_code"] == "RETENTION_RATE_MATCH_CALL"
+    assert profiles[2]["decision"]["action_code"] == "TOPUP_PREAPPROVAL_CALL"
+    assert profiles[3]["decision"]["action_code"] == "NO_ACTION"
 
 
 def test_anonymous_review_simulation_is_isolated_and_never_writes(reader):
@@ -207,12 +232,13 @@ def public_ui(reader, monkeypatch):
 def test_anonymous_website_renders_and_runs_review_simulation(public_ui):
     app, reader = public_ui
     app.run()
-    assert not app.exception and len(app.tabs) == 4
+    assert not app.exception and len(app.tabs) == 5
     assert not any("Signed in" in str(m.value) for m in app.markdown)
-    app.selectbox[0].select("C0003").run()
-    next(b for b in app.button if b.label == "Try review workflow").click().run()
-    next(t for t in app.text_input if t.label == "Fictional review note").set_value("Public synthetic workflow check")
-    next(b for b in app.button if b.label == "Save simulation decision").click().run()
+    app.session_state["workspace_tabs"] = "Customer 360"
+    next(s for s in app.selectbox if s.label == "Customer").select("C0003").run()
+    next(b for b in app.button if b.label == "Add to review queue").click().run()
+    next(t for t in app.text_input if t.label == "Review note").set_value("Public synthetic workflow check")
+    next(b for b in app.button if b.label == "Save review decision").click().run()
     assert not app.exception and app.session_state["public_reviews"][0]["status"] == "APPROVED_IN_SIMULATION"
     assert not reader.session.connection.session.requests
 
@@ -220,8 +246,10 @@ def test_anonymous_website_renders_and_runs_review_simulation(public_ui):
 def test_public_ui_hides_provider_messages_and_private_credentials(public_ui, monkeypatch, caplog):
     app, reader = public_ui
     app.run()
+    app.session_state["workspace_tabs"] = "Evidence desk"
+    app.run()
     monkeypatch.setattr(reader, "answer", lambda *_: (_ for _ in ()).throw(RuntimeError("PRIVATE_PROVIDER_CREDENTIAL")))
-    next(b for b in app.button if b.label == "Ask").click().run()
+    next(b for b in app.button if b.label == "Find the evidence").click().run()
     assert not app.exception and app.error
     assert "PRIVATE_PROVIDER_CREDENTIAL" not in caplog.text + " ".join(e.value for e in app.error)
 
@@ -248,6 +276,6 @@ def test_unavailable_backend_renders_an_explicit_offline_website(public_ui, monk
     app, _ = public_ui
     monkeypatch.setattr(public, "connect_reader", lambda *_: (_ for _ in ()).throw(RuntimeError("PRIVATE_PROVIDER_CREDENTIAL")))
     app.run()
-    assert not app.exception and len(app.tabs) == 4
+    assert not app.exception and len(app.tabs) == 5
     assert any("bundled fictional snapshot" in e.value for e in app.warning)
     assert "PRIVATE_PROVIDER_CREDENTIAL" not in caplog.text

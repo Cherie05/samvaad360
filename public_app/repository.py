@@ -35,6 +35,17 @@ def allowed_reads():
         "ON P.LOAN_ID=L.LOAN_ID WHERE L.CUSTOMER_ID=? ORDER BY P.PAYMENT_ID LIMIT 1000": 1,
         f'SELECT INTERACTION_ID,CHANNEL,TS,TEXT,EVIDENCE_TEXT,OFFLINE_SIGNALS '
         f'FROM {raw}."INTERACTIONS" WHERE CUSTOMER_ID=? ORDER BY TS DESC LIMIT 100': 1,
+        **portfolio_reads(),
+    }
+
+
+def portfolio_reads():
+    raw = f'"{DATABASE}"."{PUBLIC_SCHEMA}"'
+    return {
+        f'SELECT PAYLOAD FROM {raw}."LOANS" ORDER BY LOAN_ID LIMIT 201': 0,
+        f'SELECT PAYLOAD FROM {raw}."PAYMENTS" ORDER BY PAYMENT_ID LIMIT 2001': 0,
+        f'SELECT CUSTOMER_ID,INTERACTION_ID,CHANNEL,TS,TEXT,EVIDENCE_TEXT,OFFLINE_SIGNALS '
+        f'FROM {raw}."INTERACTIONS" ORDER BY TS DESC LIMIT 501': 0,
     }
 
 
@@ -87,6 +98,41 @@ class PublicReader(DemoRepository):
         self.customer360(customer_id)
         return []
 
+    def portfolio_profiles(self):
+        """Build the bounded 20-person work queue with four reads, not N+1 queries."""
+        from samvaad.engine import CATALOGUE, compute_metrics, decide_customer
+        customers = self.customers()
+        queries = list(portfolio_reads())
+        loans, payments, interactions = [self.rows(query) for query in queries]
+        if len(loans) > 200 or len(payments) > 2000 or len(interactions) > 500:
+            raise DemoError("This portfolio exceeds the public demonstration limits.")
+        def document(row):
+            payload = row["PAYLOAD"]
+            return json.loads(payload) if isinstance(payload, str) else dict(payload)
+        loans, payments = [document(r) for r in loans], [document(r) for r in payments]
+        by_customer = {c["customer_id"]: [] for c in customers}
+        for row in interactions:
+            if row["CUSTOMER_ID"] not in by_customer:
+                raise DemoError("The public interaction snapshot has an unexpected customer scope.")
+            signals = json.loads(row["OFFLINE_SIGNALS"]) if isinstance(row["OFFLINE_SIGNALS"], str) else dict(row["OFFLINE_SIGNALS"])
+            by_customer[row["CUSTOMER_ID"]].append({"interaction_id": row["INTERACTION_ID"],
+                "customer_id": row["CUSTOMER_ID"], "channel": row["CHANNEL"], "ts": str(row["TS"]),
+                "text": row["TEXT"], "evidence_text": row["EVIDENCE_TEXT"], "intent": signals["intent"],
+                "sentiment": signals["sentiment"], "entities": signals["entities"]})
+        reference = datetime.fromisoformat(self.reference.replace("Z", "+00:00")) if not self.is_live else datetime.now(timezone.utc)
+        result = []
+        for customer in customers:
+            cid = customer["customer_id"]
+            customer_loans = [l for l in loans if l["customer_id"] == cid]
+            loan_ids = {l["loan_id"] for l in customer_loans}
+            customer_payments = [p for p in payments if p["loan_id"] in loan_ids]
+            customer_interactions = by_customer[cid]
+            metrics = compute_metrics(customer, customer_loans, customer_payments, customer_interactions, reference)
+            result.append({"customer": customer, "loans": customer_loans, "payments": customer_payments,
+                "interactions": customer_interactions, "metrics": metrics,
+                "decision": decide_customer(customer, metrics, customer_interactions, CATALOGUE)})
+        return result
+
     def reviews(self, customer_id=None):
         raise DemoError("The public website cannot read the private staff review queue.")
 
@@ -122,16 +168,16 @@ class SnapshotReader(PublicReader):
                 if '"CUSTOMERS"' in query:
                     rows = [{"PAYLOAD": json.dumps(c)} for c in data["customers"]]
                 elif '"PAYMENTS"' in query:
-                    loans = {l["loan_id"] for l in data["loans"] if l["customer_id"] == params[0]}
+                    loans = {l["loan_id"] for l in data["loans"] if not params or l["customer_id"] == params[0]}
                     rows = [{"PAYLOAD": json.dumps(p)} for p in data["payments"] if p["loan_id"] in loans]
                 elif '"LOANS"' in query:
-                    rows = [{"PAYLOAD": json.dumps(l)} for l in data["loans"] if l["customer_id"] == params[0]]
+                    rows = [{"PAYLOAD": json.dumps(l)} for l in data["loans"] if not params or l["customer_id"] == params[0]]
                 else:
                     rows = []
                     for i in data["interactions"]:
-                        if i["customer_id"] == params[0]:
+                        if not params or i["customer_id"] == params[0]:
                             signals = extract_signals(i["text"])
-                            rows.append({"INTERACTION_ID": i["interaction_id"], "CHANNEL": i["channel"],
+                            rows.append({"CUSTOMER_ID": i["customer_id"], "INTERACTION_ID": i["interaction_id"], "CHANNEL": i["channel"],
                                 "TS": i["ts"], "TEXT": i["text"], "EVIDENCE_TEXT": signals["evidence_text"],
                                 "OFFLINE_SIGNALS": json.dumps(signals)})
                     rows.sort(key=lambda row: row["TS"], reverse=True)
