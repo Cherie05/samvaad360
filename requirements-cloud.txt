@@ -1,0 +1,3 @@
+# Optional cloud tools; installing this does not switch the product backend.
+# 4.x is the documented production connector; 5.x is preview.
+snowflake-connector-python>=4,<5

@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "bash|Bash|execute_action",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .cortex/hooks/guard_actions.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

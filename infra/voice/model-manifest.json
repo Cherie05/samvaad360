@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "reviewed_on_ist": "2026-10-05",
+  "production_loading_enabled": false,
+  "provisional_tts_default": "parler-tts/parler-tts-mini-v1",
+  "status": "proposed-assets-not-downloaded",
+  "local_asr_evidence": {
+    "repository": "Systran/faster-whisper-base",
+    "revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+    "declared_weight_license": "MIT",
+    "model_bin_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+    "asset_manifest_path": ".local/models/whisper-base/samvaad-model-manifest.json",
+    "source_notice_path": ".local/models/whisper-base/LICENSE",
+    "scope": "local ASR test only; production dependency-image review pending",
+    "production_deployment_approved": false
+  },
+  "assets": [
+    {
+      "id": "parler-tts/parler-tts-mini-v1",
+      "purpose": "Provisional production English stock-voice TTS",
+      "source": "https://huggingface.co/parler-tts/parler-tts-mini-v1",
+      "declared_license": "Apache-2.0",
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "release_review": "pending-tokenizer-codec-runtime-license-and-quality-benchmark"
+    },
+    {
+      "id": "parler-mini-v1-t5-tokenizer-and-text-encoder",
+      "purpose": "Selected v1 tokenizer vocabulary and embedded text encoder",
+      "source": "https://huggingface.co/parler-tts/parler-tts-mini-v1/blob/main/config.json",
+      "upstream_checkpoint": "google/flan-t5-large",
+      "declared_license": "Apache-2.0",
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "release_review": "pending-exact-bundled-asset-provenance-and-notices"
+    },
+    {
+      "id": "parler-tts/dac_44khZ_8kbps",
+      "purpose": "Selected v1 DAC codec weights",
+      "source": "https://huggingface.co/parler-tts/dac_44khZ_8kbps",
+      "declared_license": "MIT",
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "conversion_history": [],
+      "release_review": "pending-exact-codec-asset-and-runtime-review"
+    },
+    {
+      "id": "parler-tts/parler-tts-mini-v1.1",
+      "purpose": "Disabled alternative; Llama-2-derived prompt tokenizer terms unresolved",
+      "source": "https://huggingface.co/parler-tts/parler-tts-mini-v1.1",
+      "declared_weight_license": "Apache-2.0",
+      "tokenizer_terms_resolved": false,
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "release_review": "blocked-tokenizer-provenance-and-terms"
+    },
+    {
+      "id": "whisper-original",
+      "purpose": "ASR",
+      "source": "https://github.com/openai/whisper",
+      "declared_license": "MIT",
+      "checkpoint_choice": null,
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "conversion_history": [],
+      "release_review": "pending"
+    },
+    {
+      "id": "microsoft/speecht5_tts",
+      "purpose": "English acoustic TTS candidate",
+      "source": "https://huggingface.co/microsoft/speecht5_tts",
+      "declared_license": "MIT",
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "release_review": "pending-runtime-and-asset-verification"
+    },
+    {
+      "id": "microsoft/speecht5_hifigan",
+      "purpose": "SpeechT5 vocoder candidate",
+      "source": "https://huggingface.co/microsoft/speecht5_hifigan",
+      "declared_license": "MIT",
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "release_review": "pending-runtime-and-asset-verification"
+    },
+    {
+      "id": "speechbrain/spkrec-xvect-voxceleb",
+      "purpose": "Own-recording speaker encoder candidate",
+      "source": "https://huggingface.co/speechbrain/spkrec-xvect-voxceleb",
+      "declared_license": "Apache-2.0",
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "release_review": "pending"
+    },
+    {
+      "id": "organization-owned-speaker-vector",
+      "purpose": "TTS speaker conditioning",
+      "source": null,
+      "declared_license": null,
+      "recording_owner": null,
+      "speaker_authorization_record": null,
+      "permitted_purpose": null,
+      "withdrawal_process": null,
+      "sha256": null,
+      "release_review": "blocked-until-owned-recording-and-permission-exist"
+    },
+    {
+      "id": "ai4bharat/indic-parler-tts",
+      "purpose": "Hindi/multilingual alternative; not selected",
+      "source": "https://huggingface.co/ai4bharat/indic-parler-tts",
+      "declared_license": "Apache-2.0",
+      "access_conditions_reviewed": false,
+      "revision": null,
+      "sha256": null,
+      "saved_license_path": null,
+      "release_review": "pending-access-and-quality-benchmark"
+    }
+  ]
+}

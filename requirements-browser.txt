@@ -1,0 +1,3 @@
+# Optional isolated browser verification; use an installed Edge/Chrome or
+# provision a Playwright browser separately. No user profile is accessed.
+playwright>=1.63,<2

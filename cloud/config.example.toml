@@ -1,0 +1,6 @@
+# Credentials belong in Snowflake's private connections.toml, never this file.
+# Copy to .local/cloud.toml and choose an already configured named connection.
+[snowflake]
+connection_name = ""
+database = "SAMVAAD_DB"
+warehouse = ""

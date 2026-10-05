@@ -1,0 +1,10 @@
+[project]
+name = "samvaad360"
+version = "0.1.0"
+description = "Local Customer 360 and governed next best action application"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "app"]
+pythonpath = ["."]
+addopts = "-ra"
