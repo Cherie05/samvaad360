@@ -2,7 +2,7 @@
 
 Updated 5 October 2026 IST. The local lender web application and voice lab pass verification; production is not ready. The owner privately authenticated account `ZYLTUKM-HU63768` / `ARUNVPP24`. The separate hosted synthetic demo is now published, with warehouse/monitor/role/database creation and synthetic import reconciled. Hosted browser, live Cortex answers and CoCo account/skills/hooks remain unverified.
 
-Hosted startup subsequently failed with a Python package compilation error reported by the owner. The website is not yet working in Snowflake. A bounded environment repair helper is prepared, with six passing guard checks; account diagnosis needs a fresh private login. See [startup repair](docs/cloud-startup-repair.md).
+Hosted startup subsequently failed with a Python package compilation error reported by the owner; the simplified environment also failed. The website is not yet working in Snowflake. The private GitHub repository and workflow are connected, with two successful GitHub test runs. Eight helper guard checks pass, the latest local full suite has **207 passing tests**, and subsequent cloud/GitHub boundary checks have **35 passing tests**. The one-time Snowflake GitHub service-user setup completed; its short-lived login and default-runtime diagnostic are being verified. See [startup repair](docs/cloud-startup-repair.md) and [GitHub deployment](docs/github-deployment.md).
 
 | Deliverable | State | Evidence |
 | --- | --- | --- |
@@ -13,12 +13,13 @@ Hosted startup subsequently failed with a Python package compilation error repor
 | New transcript ingestion | Complete locally | New hardship replaces a reminder and suppresses growth |
 | Persisted voice conversation lab | Complete locally | Permission/identity gates, approved terms, callback/decline/opt-out and safe replay |
 | Actual local speech output and recognition | Verified | Windows SAPI WAV; pinned Whisper CPU ASR; reviewed-text submission |
-| Current automated gate | Passed | 199 tests, including 17 Streamlit AppTests |
+| Current automated gate | Passed | 207 tests; subsequent targeted 32 cloud/helper checks also pass |
 | Actual localhost voice/API rehearsal | Passed | 5 checks; real synthesis/transcription and persisted callback |
 | Browser visual and workflow rehearsal | Passed | 6 real-browser checks; 8 saved desktop/mobile PNG views inspected |
 | Cloud analytical assets, setup and capability doctor | Prepared and offline tested | 38 tests; metadata-only connection setup, schema/views, fixtures and bounded Cortex SQL |
 | Full cloud application repository/providers | Pending | Local factory only; cloud mode raises `CLOUD_PENDING` |
-| Separate hosted hackathon demo | Published; hosted package startup failed | 24 tests also pass on Streamlit 1.52.2; warehouse/monitor/role, schema, fixture reconciliation, six-file upload and live app version completed; `output/cloud/trial/result.json`; targeted repair pending private login |
+| Separate hosted hackathon demo | Published; hosted package startup failed | Catalog/library resolution checked in the live account; simplified environment still failed; default runtime diagnosis remains required |
+| GitHub source and CI/deployment workflow | Private repo connected; CI passed; service user configured | `Cherie05/samvaad360`; OIDC login and default-runtime diagnostic deployment being verified |
 | Actual CoCo CLI invocation | Version/help verified; account use pending | Native 1.1.87 installed from checksum-verified official archive; skills/hooks/model access unverified |
 | Self-hosted telecalling design and asset review | Prepared | `docs/telecalling-plan.md`, `docs/voice-license-review.md`, `infra/voice/` |
 | Production neural voice, PBX, carrier and identity | Pending | No real calls; no production asset loading approved |

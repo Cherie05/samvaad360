@@ -4,8 +4,10 @@ The private repository is [Cherie05/samvaad360](https://github.com/Cherie05/samv
 
 ## First connection
 
+The local helper can perform step 2 privately without copying SQL. Run `powershell.exe -NoProfile -NoExit -ExecutionPolicy Bypass -File .\scripts\connect_github_cloud.ps1`, or use the **Samvaad 360 - Connect GitHub** window the developer opens. Enter the hidden password/MFA there; the helper checks the account/user/role, refuses to replace an existing deployment user's authentication, and applies the exact reviewed SQL. `output/cloud/github-connection.json` records its status without credentials.
+
 1. Fix and open the existing hosted app using the [startup repair](cloud-startup-repair.md). The simplified app environment specifies Streamlit 1.52.2 and inherits Snowflake's preinstalled Python and Snowpark.
-2. In account `ZYLTUKM-HU63768`, open a Snowsight SQL worksheet, select `ACCOUNTADMIN`, and run [006_github_oidc.sql](../cloud/sql/006_github_oidc.sql). This creates the service user `SAMVAAD_GITHUB_DEPLOYER`, trusts short-lived GitHub tokens from this repository's **main branch**, and grants the existing dedicated synthetic app role. It does not store your personal password, create private keys, change billing, add account-wide roles or grant access to PUBLIC. If that username already exists or the account rejects OIDC, stop and inspect the specific setting; do not overwrite an existing user's authentication.
+2. In account `ZYLTUKM-HU63768`, select **Projects > Workspaces > + Add New > SQL File**, select `ACCOUNTADMIN`, and run [006_github_oidc.sql](../cloud/sql/006_github_oidc.sql). Accounts still showing Worksheets can use a SQL worksheet instead. This creates the service user `SAMVAAD_GITHUB_DEPLOYER`, trusts short-lived GitHub tokens from this repository's **main branch**, and grants the existing dedicated synthetic app role. It does not store your personal password, create private keys, change billing, add account-wide roles or grant access to PUBLIC. If that username already exists or the account rejects OIDC, stop and inspect the specific setting; do not overwrite an existing user's authentication.
 3. Open the repository **Settings > Secrets and variables > Actions > Variables** and configure:
 
 | Variable | Value |
@@ -17,6 +19,8 @@ The private repository is [Cherie05/samvaad360](https://github.com/Cherie05/samv
 No personal Snowflake password or MFA code goes into a GitHub secret. The official Snowflake action obtains a short-lived OIDC token for each deployment. Do not change the workflow's job to use a named GitHub environment without also updating the trusted OIDC subject: GitHub emits a different subject when a job targets an environment.
 
 4. Under **Actions**, select **Test and deploy Samvaad 360 > Run workflow**, with branch **main**. Check that the test and deploy jobs pass, then reopen the hosted app. Publication output alone does not verify the browser. The account/role guard runs before file uploads.
+
+For the unresolved startup failure, select deployment mode **runtime-check** first. This creates the private `SAMVAAD_RUNTIME_CHECK` diagnostic app using Snowflake's default preinstalled environment, with no `environment.yml` or customer-data queries. Open it under **Projects > Streamlit** and record the displayed Python/Streamlit/Snowpark versions, or the visible startup error. If the blank default app also fails, the blocker is broader than Samvaad's application code. The diagnostic can be recreated by subsequent diagnostic runs; it does not replace `SAMVAAD360` or its customer/review tables.
 
 ## Subsequent releases
 

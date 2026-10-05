@@ -31,6 +31,7 @@ def main():
     parser.add_argument("--owner", default="Cherie05")
     parser.add_argument("--repo", default="samvaad360")
     parser.add_argument("--enable-deploy", action="store_true")
+    parser.add_argument("--mode", choices=["app", "runtime-check"], default="app")
     args = parser.parse_args()
     if not re.fullmatch(r"[A-Za-z0-9-]{1,39}", args.owner) or not re.fullmatch(r"[A-Za-z0-9_.-]{1,100}", args.repo):
         raise SystemExit("INVALID_REPOSITORY_TARGET")
@@ -52,7 +53,7 @@ def main():
                 raise SystemExit(f"GITHUB_VARIABLE_CONFIGURATION_FAILED_HTTP_{response.status_code}")
         print(json.dumps({"status": "VARIABLES_CONFIGURED", "deployment_enabled": args.enable_deploy, "personal_password_uploaded": False}))
     elif args.operation == "run":
-        response = client.post(base + "/actions/workflows/snowflake.yml/dispatches", json={"ref": "main"}, timeout=30)
+        response = client.post(base + "/actions/workflows/snowflake.yml/dispatches", json={"ref": "main", "inputs": {"deployment_mode": args.mode}}, timeout=30)
         if response.status_code != 204:
             raise SystemExit(f"WORKFLOW_DISPATCH_FAILED_HTTP_{response.status_code}")
         print("MAIN_BRANCH_WORKFLOW_REQUESTED")

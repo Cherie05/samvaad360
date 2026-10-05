@@ -5,6 +5,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      deployment_mode:
+        description: 'Update the app or create a minimal default-runtime diagnostic'
+        type: choice
+        options: [app, runtime-check]
+        default: app
 
 permissions:
   contents: read
@@ -45,6 +51,7 @@ jobs:
       SNOWFLAKE_DATABASE: SAMVAAD_STAGING
       SNOWFLAKE_SCHEMA: APP
       SAMVAAD_VIEWER: ${{ vars.SAMVAAD_VIEWER }}
+      SAMVAAD_DEPLOYMENT_MODE: ${{ inputs.deployment_mode || 'app' }}
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -61,9 +68,9 @@ jobs:
           test -n "$SAMVAAD_VIEWER"
       - name: Package only the hosted app files
         shell: bash
-        run: python -m scripts.package_github_release --account "$SNOWFLAKE_ACCOUNT" --viewer "$SAMVAAD_VIEWER"
+        run: python -m scripts.package_github_release --account "$SNOWFLAKE_ACCOUNT" --viewer "$SAMVAAD_VIEWER" --mode "$SAMVAAD_DEPLOYMENT_MODE"
       - name: Check connection and update the existing app
         shell: bash
         run: |
           snow connection test -x
-          snow sql -x -f output/cloud/github/04-update-existing-app.sql
+          snow sql -x -f output/cloud/github/04-release.sql

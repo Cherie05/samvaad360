@@ -36,11 +36,13 @@ def bootstrap(config, user, quota):
     return re.sub(r"\{\{([A-Z]+)\}\}", lambda match: values[match[1]], text)
 
 
-def package(config, *, account, user, quota=5, output=None):
+def package(config, *, account, user, quota=5, output=None, isolated_metadata=False):
+    folder = Path(output or WORKSPACE / "output/cloud/trial").resolve()
+    metadata_paths = ({"connections_path": folder / "unused-connection.toml",
+                       "project_path": folder / "unused-project.toml"} if isolated_metadata else {})
     # Reuse the credential-free setup validation without writing configuration.
     setup = configure(account=account, user=user, warehouse=config.warehouse,
-                      name=config.connection_name, database=config.database, role=ROLE)
-    folder = Path(output or WORKSPACE / "output/cloud/trial").resolve()
+                      name=config.connection_name, database=config.database, role=ROLE, **metadata_paths)
     folder.mkdir(parents=True, exist_ok=True)
     release = folder / "app"
     release.mkdir(exist_ok=True)
