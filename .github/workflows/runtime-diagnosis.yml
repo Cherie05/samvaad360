@@ -3,6 +3,10 @@ name: Diagnose Snowflake hosted runtime
 on:
   workflow_dispatch:
     inputs:
+      probe_cortex:
+        description: 'Make one synthetic Cortex request with a 16-token output cap (metered)'
+        type: boolean
+        default: false
       repair_main_live:
         description: 'Restore only a missing main-app live copy from its committed version'
         type: boolean
@@ -40,6 +44,9 @@ jobs:
           use-oidc: true
       - name: Inspect package metadata and temporary runtime functions
         run: python -m scripts.diagnose_github_runtime
+      - name: Check the configured Cortex model with one bounded synthetic request
+        if: inputs.probe_cortex
+        run: snow sql -x -q "SELECT AI_COMPLETE('llama3.3-70b', 'Synthetic connection check. Reply only OK.', {'temperature':0, 'max_tokens':16}) AS CORTEX_PROBE"
       - name: Restore the main-app live copy if unavailable
         if: inputs.repair_main_live
         run: python -m scripts.ensure_github_live_version
