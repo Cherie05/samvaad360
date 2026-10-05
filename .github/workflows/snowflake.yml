@@ -73,4 +73,10 @@ jobs:
         shell: bash
         run: |
           snow connection test -x
+          if [ "$SAMVAAD_DEPLOYMENT_MODE" = "app" ]; then
+            python -m scripts.ensure_github_live_version
+          fi
           snow sql -x -f output/cloud/github/04-release.sql
+          if [ "$SAMVAAD_DEPLOYMENT_MODE" = "app" ]; then
+            python -m scripts.ensure_github_live_version
+          fi

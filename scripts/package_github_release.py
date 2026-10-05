@@ -45,6 +45,7 @@ def build(*, account, viewer, database="SAMVAAD_STAGING", warehouse="SAMVAAD_XS"
             environment.write_text("name: samvaad-pinned-runtime-check\nchannels:\n  - snowflake\ndependencies:\n  - python=3.11.15\n  - streamlit=1.52.2\n  - snowflake-snowpark-python=1.55.0\n", encoding="utf-8")
             files.append(environment)
             diagnostic = "SAMVAAD_PINNED_RUNTIME_CHECK"
+            source.write_text(source.read_text(encoding="utf-8").replace("Samvaad native runtime check", "Samvaad pinned runtime check").replace("Snowflake default app runtime", "Snowflake pinned app runtime"), encoding="utf-8")
         stage = config.object("APP", "RELEASES") + "/runtime_check_" + hashlib.sha256(b"".join(file.read_bytes() for file in files)).hexdigest()[:16]
         for file in files:
             sql.append(f"PUT '{file.as_uri()}' @{stage} AUTO_COMPRESS=FALSE OVERWRITE=TRUE")

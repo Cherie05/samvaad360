@@ -22,6 +22,10 @@ The manual **Diagnose Snowflake hosted runtime** GitHub workflow now inspects th
 
 The workflow's optional `publish_pinned_check` input publishes a separate `SAMVAAD_PINNED_RUNTIME_CHECK` app with Python 3.11.15, Streamlit 1.52.2 and Snowpark 1.55.0 in its environment. It preserves both the original blank check and `SAMVAAD360`. Only an actual browser result can establish whether the explicit pin fixes hosted startup. The first diagnosis attempt stopped on nested CLI result parsing; the parser was corrected and the successful run linked above supersedes it.
 
+The owner subsequently confirmed that **`SAMVAAD_PINNED_RUNTIME_CHECK` opens** after [its publication](https://github.com/Cherie05/samvaad360/actions/runs/37335059500). This is the first successful hosted startup observation. The full environment above is now applied to the main app source, with main-app publication/browser rehearsal still pending. The owner has not yet supplied the diagnostic's displayed version JSON.
+
+Two later main-app uploads failed with **099108: Live version is not found**, before the first `PUT`; the previous release remains committed. The deployment now inspects the live file location before and after an app update and restores it from the committed version only for that exact missing-version error. Other errors stop deployment. Existing live edits are preserved by the inspection; no abort, app replacement or data reload is used. A real GitHub run must still verify this recovery path.
+
 The first OIDC login used GitHub's older name-only subject and failed. The owner completed the scoped correction to this new repository's immutable owner/repository identity; the retried deployment passed. No further private password prompt is currently required. The earlier diagnostic connections were closed; no customer data or hosted app files were modified by those helper attempts. A Windows GET backup-path failure was corrected in the helper before source publication. Python is the runtime argument of the package resolver, not a package to include in its PACKAGES specification.
 
 ## Private diagnostic and targeted repair
