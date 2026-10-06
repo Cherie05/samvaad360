@@ -1,5 +1,7 @@
 # Local verification and reproducible checks
 
+**Historical local verification, 5 October 2026.** The results and initial cloud-discovery state below describe that earlier build. The current release has 557 passing CI tests, 20 hosted public browser checks and six private relationship browser checks; Snowflake staging and the public site are now deployed. Use [current build status](../BUILD_STATUS.md), [public deployment verification](public-website-deployment.md) and [submission status](submission-guide.md) for the latest evidence.
+
 The application runs on this laptop: Streamlit frontend, shared Python domain service, FastAPI integration/invitation boundary, SQLite state and a persisted voice lab. Contacts and borrower data are synthetic. Local audio uses actual installed SAPI speech and local CPU Whisper recognition; carrier telephony is disabled.
 
 ## Automated gate
@@ -50,14 +52,14 @@ After rehearsal, reset the synthetic database again. Old invitation links stop w
 
 | Check | Actual result |
 | --- | --- |
-| Current full automated suite | **175 passed in 47.44 seconds**, 5 October 2026 IST; `output/local-test-results.xml` and `output/production-readiness-tests.xml`. One nonblocking Starlette test-client deprecation warning. |
+| Historical full automated suite | **175 passed in 47.44 seconds**, 5 October 2026 IST; `output/local-test-results.xml` and `output/production-readiness-tests.xml`. One nonblocking Starlette test-client deprecation warning. |
 | Package compatibility and CLI sanity | Passed: no broken requirements; 20 customers, no fixture/identity errors, external delivery disabled |
 | Initial localhost application/API rehearsal | **7 checks passed**; health/auth, Ananya retention, Imran credit invitation/opt-out, Ravi callback and Kabir ingestion. `output/local-runtime-check.json` |
 | Actual localhost voice and audio rehearsal | **5 checks passed**; authenticated status, real SAPI WAV, real Whisper recognition, persisted Ravi callback and exact replay with no hardship invitation. `output/local-voice-runtime-check.json` |
 | Audio smoke | Synthetic phrase recognized exactly after normalization. Latest speech/ASR HTTP round trip: 14.049 seconds during development verification; earlier standalone ASR: 3.388 seconds. Single generated sample, not an accuracy or production latency benchmark. |
-| Current browser visual/workflow check | **6 checks passed** in a fresh isolated browser; 8 saved PNG views inspected. `output/local-browser-check.json` and `output/screenshots/`. Active tabs persist and no duplicate controls remain after voice turns. |
+| Historical browser visual/workflow check | **6 checks passed** in a fresh isolated browser; 8 saved PNG views inspected. `output/local-browser-check.json` and `output/screenshots/`. Active tabs persist and no duplicate controls remain after voice turns. |
 | Fresh interactive state | Passed: 20 customers, 3 seeded actions (2 pending, 1 approved), no offers/voice sessions, and both service health endpoints passed. `output/local-final-state.json`. |
-| Cloud capability discovery | Connector installed; no configured account/warehouse or CoCo CLI; no account contacted. `output/cloud/capabilities.json` |
+| Initial cloud capability discovery | At that initial check: connector installed; account/warehouse and CoCo CLI were unconfigured; no account contacted. Superseded by current cloud deployment evidence. `output/cloud/capabilities.json` |
 | Known Python dependency advisories | Zero findings across 101 distributions after targeted pip/setuptools updates; no skips. This is not an application/OS/model security certification. `output/production-dependency-audit.json` |
 
 ## Production gates

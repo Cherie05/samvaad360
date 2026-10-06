@@ -1,0 +1,57 @@
+{
+  "updated_at_utc": "2026-10-06T15:45:38.763807+00:00",
+  "scope": "Submission packaging; distinguish preparation from organizer compliance and actual submission",
+  "public_repository": "https://github.com/Cherie05/samvaad360",
+  "public_website": "https://samvaad360.streamlit.app/",
+  "challenge": "Customer 360 and Next Best Action Engine",
+  "production_ready": false,
+  "real_calls_verified": false,
+  "lender_continuous_sync_activated": false,
+  "portal_submitted": false,
+  "organizer_template_verified": false,
+  "coco_workflow_and_recording_verified": false,
+  "verified_product_release": {
+    "source_commit": "7a619e718508777ee491bcf78309b0b2a8f0d7c3",
+    "ci_run": "https://github.com/Cherie05/samvaad360/actions/runs/37483107870",
+    "ci_passed": 557,
+    "hosted_browser_passed": 20,
+    "private_relationship_browser_passed": 6
+  },
+  "submission_local_targeted_tests": {
+    "passed": 38,
+    "seconds": 7.1,
+    "scope": "CoCo guard contracts, public app and visit reader"
+  },
+  "deck": {
+    "pages": 10,
+    "pdf_bytes": 625215,
+    "slides_visually_reviewed": 10,
+    "pdf_pages_visually_reviewed": 10,
+    "template": "Custom; organizer template not supplied"
+  },
+  "product_walkthrough": {
+    "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Demo.mp4",
+    "seconds": 251.51,
+    "playback_speed": 1.4,
+    "recorded_real_website": true,
+    "live_snowflake_source_verified": true,
+    "includes_native_coco_cli": false
+  },
+  "assets": [
+    {
+      "name": "Samvaad360_Prototype_Deck.pdf",
+      "bytes": 625215,
+      "sha256": "4f9dd8c4a0fae74fe1bc937bf1c2f27a8c153a1529f65618978fafc6f54f7189"
+    },
+    {
+      "name": "Samvaad360_Prototype_Deck.pptx",
+      "bytes": 368771,
+      "sha256": "01f99b4d5b90d32658175b3985199d48cd760dd1b35b4779b30fcaa789904ee3"
+    },
+    {
+      "name": "Samvaad360_Demo.mp4",
+      "bytes": 8845231,
+      "sha256": "e85852641a0a85d89d65f6b56c703aec5a876a8f2fb0bed5e7022bc77ebd050c"
+    }
+  ]
+}

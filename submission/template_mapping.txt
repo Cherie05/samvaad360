@@ -1,0 +1,28 @@
+SAMVAAD360 PROTOTYPE DECK — PROVISIONAL CUSTOM TEMPLATE
+
+Organizer submission template was not supplied at generation. This is a custom
+10-slide presentation and PDF using the product's forest/cream visual design.
+Do not describe this as the official organizer template.
+
+Suggested mapping when the official template is available:
+1. Solution name / challenge: slide 1
+2. Problem statement: slide 2
+3. Prototype / product brief: slide 3
+4. Architecture and stack: slide 4
+5. Modular capabilities and CoCo evidence / generate / approved runner skills: slide 5
+6. End-to-end working workflow: slide 6
+7. Customer onboarding and source synchronization: slide 7
+8. Governance and enterprise controls: slide 8
+9. Validation, deployment scope and remaining production gates: slide 9
+10. Public prototype and GitHub links: slide 10
+
+Evidence scope:
+557 automated tests passed in GitHub CI.
+20 anonymous hosted browser checks passed with Snowflake verified.
+6 private staff/borrower browser checks passed.
+All customer records and public review/conversation outcomes are fictional.
+Public changes remain isolated to one visit; persistent operational CRM is local.
+Private Snowflake writer activation and real-carrier call proof remain pending.
+CoCo skill definitions exist; authenticated end-to-end skill execution proof must
+be verified separately. Do not imply that a browser-only video meets the CoCo
+CLI requirement without an actual execution recording.

@@ -20,3 +20,5 @@ Samvaad360_PRD.pdf
 *.pt
 *.onnx
 *.safetensors
+/submission/*.mp4
+/submission/*.webm

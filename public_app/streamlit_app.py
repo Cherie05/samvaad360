@@ -640,6 +640,16 @@ with st.sidebar:
         st.button(label, key="sidebar_" + cid, width="stretch", on_click=open_workspace, args=(cid,))
     st.divider()
     html('<div class="sidebar-note"><strong>Public demo</strong><br>Fictional lending records. Reviews and voice conversations are simulations for this visit.</div>')
+    with st.expander("Start here · Judge's guide"):
+        st.write("1. Explore Imran's growth recommendation and its cited evidence.")
+        st.write("2. Add it to Review queue, approve the fictional proposal, and open Call studio.")
+        st.write("3. Choose ‘I lost my job’. See the growth offer become a supportive officer handoff.")
+        st.write("4. Open Customer hub to try onboarding, a validated import, and contact withdrawal.")
+        st.caption("All exercises use fictional data. New records and reviews belong only to your visit.")
+        st.markdown("[Public source and setup](https://github.com/Cherie05/samvaad360) · "
+                    "[Submission guide](https://github.com/Cherie05/samvaad360/blob/main/docs/submission-guide.md) · "
+                    "[Prototype deck](https://github.com/Cherie05/samvaad360/blob/main/submission/Samvaad360_Prototype_Deck.pdf)")
+        st.markdown("[Watch the product walkthrough](https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Demo.mp4)")
 
 html('<div class="topline"><span>WORKSPACE / CUSTOMER RELATIONSHIPS</span>'
      f'<span class="live-pill"><span class="live-dot"></span>{"Protected Snowflake snapshot" if repository.is_live else "Snapshot demonstration"}</span></div>')
