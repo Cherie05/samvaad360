@@ -6,9 +6,9 @@ Samvaad 360 connects loan and repayment records with emails, chats and call tran
 
 Built for **Customer 360 and Next Best Action Engine** in the [Snowflake CoCo CLI Hackathon — GCC Edition](https://hack2skill.com/event/cococlihack-gccedition/).
 
-**[Open the live prototype](https://samvaad360.streamlit.app/)** · **[Public repository](https://github.com/Cherie05/samvaad360)** · **[Official submission PDF](submission/Samvaad360_Official_Submission.pdf)** · **[Editable official deck](submission/Samvaad360_Official_Submission.pptx)**
+**[Open the live prototype](https://samvaad360.streamlit.app/)** · **[Public repository](https://github.com/Cherie05/samvaad360)** · **[Official submission PDF](submission/Samvaad360_Official_Submission_Final.pdf)** · **[Editable official deck](submission/Samvaad360_Official_Submission_Final.pptx)**
 
-**[Watch the 4:12 product walkthrough](https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Demo.mp4)**. Recorded on the actual public Snowflake-backed website with narration at 1.4× playback. The required native CoCo CLI segment remains unverified; this recording covers the product workflow.
+**[Watch the final 3:42 demo](https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_CoCo_Submission.mp4)**. Silent video combining actual native CoCo evidence/recommendation/approved-runner processing and the public Snowflake-backed UI. The filmed callback replay returns the existing `COMPLETED/CALLBACK` record with one attempt; no real call is placed. Native footage is 1×; website footage is labelled 1.4×.
 
 ![The live Customer 360 workspace with fictional repayment facts, policy gates and an omnichannel journey](submission/assets/customer360.png)
 
@@ -43,7 +43,7 @@ The public backend reads **20 seeded fictional customers from Snowflake**. Publi
 
 Verified **6 October 2026**. See [build evidence](BUILD_STATUS.md) and [deployment details](docs/public-website-deployment.md).
 
-Real telephone calling is disabled. The genuine carrier adapter awaits configuration and acceptance testing. The prototype is not production ready: enterprise identity, operational cloud storage and actual source integration remain required. Local CoCo installation and discovery of the evidence/generate/runner skills are verified; **actual CoCo workflow execution and its recording remain pending**. The six-page official deck follows the supplied organizer template, with **Glacier Queries / Arunvpp / team size 1**. No participant submission receipt is recorded.
+Real telephone calling is disabled. The genuine carrier adapter awaits configuration and acceptance testing. The prototype is not production ready: enterprise identity, operational cloud storage and actual source integration remain required. Actual native CoCo evidence/generate/runner execution and the final combined silent recording are verified against returned tool output and stored state. The six-page official deck follows the supplied organizer template, with **Glacier Queries / Arunvpp / team size 1**. No participant submission receipt is recorded.
 
 ## Run locally
 
@@ -57,4 +57,4 @@ python -m venv .venv
 
 Staff UI: **http://127.0.0.1:8501** · API: **http://127.0.0.1:8000/docs**. Local personas are demonstration identities. Voice/cloud dependencies are optional; setup and verification are in the [developer guide](docs/developer-guide.md).
 
-**[Submission fields and remaining artifacts](docs/submission-guide.md)** · **[Demo script](docs/demo-script.md)** · **[Relationship architecture](docs/customer-relationship-plan.md)** · **[Production gates](docs/production-readiness.md)**
+**[Final submission fields and files](docs/submission-guide.md)** · **[Demo script](docs/demo-script.md)** · **[Relationship architecture](docs/customer-relationship-plan.md)** · **[Production gates](docs/production-readiness.md)**

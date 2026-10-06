@@ -9,15 +9,13 @@ Website: https://samvaad360.streamlit.app/
 
 MODULE 2 - PROTOTYPE / MVP
 Challenge: Customer 360 and Next Best Action Engine
-Brief (871 characters):
-Samvaad360 is a lending Customer 360 and Next Best Action prototype. It joins loan/payment facts with emails, chats and call transcripts, then recommends evidence-backed, reviewable interventions. Consent, hardship and opt-out checks prevent inappropriate outreach; a new job-loss reply stops an earlier growth proposal and routes human help. Six workspaces cover portfolio visualizations, customer journeys, cited answers, review queues, adaptive conversation rehearsal and onboarding/imports/servicing. A restricted Snowflake reader serves 20 fictional customers with shared snapshots and query budgets. Verified: 557 CI tests, 20 hosted-browser checks and 6 private local portal checks. Public changes are visit-only simulations; real calls and financial execution are disabled. The repository includes modular evidence, recommendation and approved-runner CoCo skills.
+Brief (903 characters):
+Samvaad360 is a lending Customer 360 and Next Best Action prototype. It joins loan/payment facts with emails, chats and call transcripts to recommend evidence-backed interventions. Consent, hardship and opt-out checks prevent inappropriate outreach; a job-loss reply stops a growth proposal and routes human help. Six workspaces cover portfolio visualizations, customer journeys, cited answers, review queues, conversation rehearsal and onboarding/imports/servicing. A restricted Snowflake reader serves 20 fictional customers through shared snapshots and query budgets. Verified: 557 CI tests, 20 hosted-browser checks and 6 private local portal checks. The recorded native CoCo workflow demonstrates evidence, recommendation and approved-runner skills, with a stored COMPLETED/CALLBACK result and safe replay. Public changes are visit-only simulations; real calls and financial execution are disabled.
 
-Upload PDF: Samvaad360_Official_Submission.pdf (6 pages; 3.12 MB)
-
-VIDEO REQUIREMENT STILL PENDING:
-The existing 4:12 product walkthrough lacks actual native CoCo input/tool/output.
-A genuine 3-5 minute CLI recording with 2-3 skills and one complete flow is needed.
-Do not claim that browser-only footage satisfies this requirement.
+Demo video link: https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_CoCo_Submission.mp4
+Video: 3:42, actual native CoCo + actual website UI, no audio track.
+PDF upload: Samvaad360_Official_Submission_Final.pdf (6 pages; 3.12 MB)
+PDF download: https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission_Final.pdf
 
 Portal deadline supplied by participant: 6 October 2026, 11:59 PM IST.
-Submit both modules and save their successful confirmations.
+Click Submit in both modules and keep both successful confirmations.

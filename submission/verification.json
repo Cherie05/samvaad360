@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-10-06T16:16:02.986904+00:00",
+  "updated_at_utc": "2026-10-06T17:18:41.660419+00:00",
   "scope": "Submission packaging; distinguish preparation from organizer compliance and actual submission",
   "public_repository": "https://github.com/Cherie05/samvaad360",
   "public_website": "https://samvaad360.streamlit.app/",
@@ -9,10 +9,10 @@
   "lender_continuous_sync_activated": false,
   "portal_submitted": false,
   "organizer_template_verified": true,
-  "coco_workflow_and_recording_verified": false,
+  "coco_workflow_and_recording_verified": true,
   "verified_product_release": {
-    "source_commit": "7a619e718508777ee491bcf78309b0b2a8f0d7c3",
-    "ci_run": "https://github.com/Cherie05/samvaad360/actions/runs/37483107870",
+    "source_commit": "7e8cdc63805efde662bbc300dede0f33ce5cff07",
+    "ci_run": "https://github.com/Cherie05/samvaad360/actions/runs/37490270245",
     "ci_passed": 557,
     "hosted_browser_passed": 20,
     "private_relationship_browser_passed": 6
@@ -23,10 +23,10 @@
     "scope": "CoCo guard contracts, public app and visit reader"
   },
   "deck": {
-    "pdf": "Samvaad360_Official_Submission.pdf",
-    "pptx": "Samvaad360_Official_Submission.pptx",
+    "pdf": "Samvaad360_Official_Submission_Final.pdf",
+    "pptx": "Samvaad360_Official_Submission_Final.pptx",
     "pages": 6,
-    "pdf_bytes": 3113451,
+    "pdf_bytes": 3113560,
     "slides_visually_reviewed": 6,
     "pdf_pages_visually_reviewed": 6,
     "template": "Actual organizer PPTX supplied by participant",
@@ -35,7 +35,9 @@
     "zero_fidelity_issues": true,
     "sources_blocks": 6,
     "pdf_clickable_links_verified": true,
-    "team_cover_confirmed": true
+    "team_cover_confirmed": true,
+    "pdf_sha256": "3cad1008580c93b395a0e7356f61d264fe0136d2b67c7016c56982aecd12badd",
+    "pptx_sha256": "4714216f3a9055632db2787d0ed05e6bb6d17b1b053b05eb2c509ae89793615f"
   },
   "product_walkthrough": {
     "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Demo.mp4",
@@ -70,6 +72,21 @@
       "name": "Samvaad360_Official_Submission.pptx",
       "bytes": 5262020,
       "sha256": "c4993450a0d2916ce9ace9e51dd9833d598ef1a6a65c31dbf4fecd447447719f"
+    },
+    {
+      "name": "Samvaad360_Official_Submission_Final.pdf",
+      "bytes": 3113560,
+      "sha256": "3cad1008580c93b395a0e7356f61d264fe0136d2b67c7016c56982aecd12badd"
+    },
+    {
+      "name": "Samvaad360_Official_Submission_Final.pptx",
+      "bytes": 5262319,
+      "sha256": "4714216f3a9055632db2787d0ed05e6bb6d17b1b053b05eb2c509ae89793615f"
+    },
+    {
+      "name": "Samvaad360_CoCo_Submission.mp4",
+      "bytes": 9603935,
+      "sha256": "a5001bcdc044609053d26cbfd23052fa9304a21cdd2859376a47808206350e29"
     }
   ],
   "submission_source_commit": "7e8cdc63805efde662bbc300dede0f33ce5cff07",
@@ -132,12 +149,29 @@
     "native_version": "1.1.87",
     "oauth_setup_completed_by_owner": true,
     "three_demo_skills_discovered": true,
-    "callback_state": "APPROVED",
-    "observed_hook_operations": [
-      "ask"
+    "actual_native_tool_trace_verified": true,
+    "actual_recording_verified": true,
+    "full_workflow_verified": true,
+    "customer_id": "C0001",
+    "action_id": "e2e19413-c7b0-4583-af6b-f52199122e66",
+    "callback_state": "COMPLETED",
+    "outcome": "CALLBACK",
+    "execution_mode": "simulate",
+    "attempts": 1,
+    "completed_at": "2026-10-06T16:23:35.422079+00:00",
+    "evidence_ids": [
+      "I-C0001-07",
+      "I-C0001-08"
     ],
-    "full_workflow_verified": false,
-    "model_smoke": "Exit 1 with no assistant response in separate process; native completion remains unverified"
+    "first_run_proof": "Participant-provided actual native SKILL/POWERSHELL output correlated with read-only isolated SQLite action and response event.",
+    "recorded_run": "Fresh native CLI idempotent replay of the same completed action, with actual tool output and unchanged attempts.",
+    "observed_hook_operations": [
+      "ask",
+      "recommend",
+      "execute"
+    ],
+    "hook_authority": "Advisory; service enforces approval/consent/eligibility/idempotency. Native hook fail-closed or shell sandbox enforcement not claimed.",
+    "prior_bounded_auth_probe": "Earlier separate process returned exit 1 without response; later actual interactive native session verified."
   },
   "registration": {
     "team": "Glacier Queries",
@@ -152,7 +186,7 @@
     "pdf_pages_visually_reviewed": 10,
     "template": "Custom; organizer template not supplied"
   },
-  "portal_brief_characters": 871,
+  "portal_brief_characters": 903,
   "official_public_assets": {
     "checked_at_utc": "2026-10-06T16:17:10.876939+00:00",
     "authenticated_requests": false,
@@ -173,5 +207,277 @@
       }
     ],
     "status": "PASSED"
+  },
+  "final_submission_video": {
+    "seconds": 222.03,
+    "width": 1920,
+    "height": 1080,
+    "has_audio_stream": false,
+    "audio_removed": true,
+    "native_source_seconds": 56.73,
+    "native_playback_speed": 1.0,
+    "native_source_sha256": "d1dc0425d55173985ff5ace682e46e3474097eee3df9f27222e00f784d193ab8",
+    "native_segment": "Actual participant-recorded CoCo prompt, tool processing, evidence/recommendation/status/runner output; idempotent replay of previously completed callback.",
+    "website_chapters": [
+      1,
+      3,
+      4,
+      5,
+      7,
+      8,
+      9
+    ],
+    "website_playback_speed": 1.4,
+    "bytes": 9603935,
+    "sha256": "a5001bcdc044609053d26cbfd23052fa9304a21cdd2859376a47808206350e29",
+    "duration_requirement_verified": true,
+    "visual_qa": "Passed: 16 sampled frames/contact sheet, native prompt/processing/final result and public UI inspected; 16-position browser decode/playback verified.",
+    "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_CoCo_Submission.mp4",
+    "actual_native_coco": true,
+    "actual_hosted_website": true,
+    "local_browser_playback": {
+      "checked_at_utc": "2026-10-06T16:56:35.506664+00:00",
+      "status": "PASSED",
+      "local_browser_playback_verified": true,
+      "samples": [
+        {
+          "seconds": 222.033333,
+          "currentTime": 0.620874,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 23
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 12.62288,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 158
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 22.620409,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 342
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 32.624089,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 393
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 42.618159,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 551
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 54.627118,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 619
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 59.644302,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 712
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 87.615976,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 896
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 103.61665,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 1059
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 124.628214,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 1102
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 146.625293,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 1305
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 158.623064,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 1369
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 172.623588,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 1608
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 192.624576,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 1689
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 212.620235,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 1875
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 220.617179,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 2048
+        }
+      ],
+      "positions_tested": 16,
+      "authenticated_browser": false,
+      "source": "Local MP4 loaded as a browser Blob; no HTTP range server required."
+    },
+    "public_link_verified": true,
+    "anonymous_public_playback": {
+      "checked_at_utc": "2026-10-06T17:17:48.257080+00:00",
+      "status": "PASSED",
+      "authenticated_browser": false,
+      "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_CoCo_Submission.mp4",
+      "positions_tested": 4,
+      "samples": [
+        {
+          "seconds": 222.033333,
+          "currentTime": 10.668171,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 78
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 54.690632,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 149
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 158.674103,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 213
+        },
+        {
+          "seconds": 222.033333,
+          "currentTime": 212.680326,
+          "width": 1920,
+          "height": 1080,
+          "error": null,
+          "paused": false,
+          "decodedFrames": 397
+        }
+      ]
+    }
+  },
+  "final_public_assets": {
+    "checked_at_utc": "2026-10-06T17:17:36.425187+00:00",
+    "authenticated_requests": false,
+    "assets": [
+      {
+        "name": "Samvaad360_Official_Submission_Final.pdf",
+        "http": 200,
+        "bytes": 3113560,
+        "sha256_matches": true,
+        "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission_Final.pdf"
+      },
+      {
+        "name": "Samvaad360_Official_Submission_Final.pptx",
+        "http": 200,
+        "bytes": 5262319,
+        "sha256_matches": true,
+        "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission_Final.pptx"
+      },
+      {
+        "name": "Samvaad360_CoCo_Submission.mp4",
+        "http": 200,
+        "bytes": 9603935,
+        "sha256_matches": true,
+        "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_CoCo_Submission.mp4"
+      }
+    ],
+    "status": "PASSED"
+  },
+  "final_package_checks": {
+    "markdown_local_links": 156,
+    "missing_links": 0,
+    "artifact_python_syntax": "PASS",
+    "artifact_node_syntax": "PASS",
+    "git_diff_whitespace": "PASS",
+    "credential_pattern_findings": 0,
+    "credential_history_text_blobs": 355,
+    "credential_working_files": 213,
+    "final_pdf_pages": 6,
+    "final_sources_notes": 6,
+    "pdf_links_verified": true,
+    "final_video_no_audio_stream": true,
+    "final_video_anonymous_playback": "PASS",
+    "runtime_code_changed_for_final_packaging": false
   }
 }

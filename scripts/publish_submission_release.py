@@ -14,6 +14,9 @@ from scripts.github_actions import session
 ROOT = Path(__file__).resolve().parents[1]
 TAG = "hackathon-submission-2026"
 FILES = {
+    "Samvaad360_Official_Submission_Final.pdf": "application/pdf",
+    "Samvaad360_Official_Submission_Final.pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "Samvaad360_CoCo_Submission.mp4": "video/mp4",
     "Samvaad360_Official_Submission.pdf": "application/pdf",
     "Samvaad360_Official_Submission.pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     "Samvaad360_Prototype_Deck.pdf": "application/pdf",
@@ -26,6 +29,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
+    verification = json.loads((ROOT / "submission/verification.json").read_text(encoding="utf-8"))
+    if not verification.get("coco_workflow_and_recording_verified"):
+        raise SystemExit("FINAL_NATIVE_RECORDING_NOT_VERIFIED")
     assets = []
     for name, mime in FILES.items():
         path = ROOT / "submission" / name
@@ -74,7 +80,7 @@ def main():
         print("PUBLIC_ASSET_UPLOADED: " + asset["name"], flush=True)
     report = {"status": "PUBLISHED", "release": release["html_url"], "assets": assets,
               "portal_submitted": False, "organizer_template_verified": True,
-              "coco_video_requirement_verified": False}
+              "coco_video_requirement_verified": True}
     path = ROOT / "output/submission-release.json"
     path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))

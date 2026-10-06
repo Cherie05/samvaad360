@@ -6,10 +6,13 @@ import { FileBlob, PresentationFile } from '@oai/artifact-tool';
 
 const ROOT = path.resolve(process.argv[2]);
 const SIZE = process.argv[3];
+const STEM = process.argv[4] || 'Samvaad360_Official_Submission';
+const NATIVE = process.argv[5] === 'verified-native';
+if (!/^[A-Za-z0-9_-]+$/.test(STEM)) throw new Error('Invalid output basename.');
 if (!SIZE || !/^\d+$/.test(SIZE) || Number(SIZE) < 1) throw new Error('Confirmed team size is required.');
 const BUILD = path.join(ROOT,'output','organizer-template-build');
-const QA = path.join(BUILD,'final-preview');
-const LAYOUT = path.join(BUILD,'final-layout');
+const QA = path.join(BUILD,'final-preview',STEM);
+const LAYOUT = path.join(BUILD,'final-layout',STEM);
 await fs.mkdir(QA,{recursive:true});
 await fs.mkdir(LAYOUT,{recursive:true});
 const p = await PresentationFile.importPptx(await FileBlob.load(path.join(BUILD,'template-starter.pptx')));
@@ -69,7 +72,7 @@ content(slides[2],[
  section('Private operational path: FastAPI + persistent SQLite'),
  line('Reviewed intake / versioned imports / servicing / audit records'),
  section('CoCo skills: evidence  \u2192  generate  \u2192  approved runner'),
- line('Local CLI + isolated data; native execution proof is pending.'),
+ line(NATIVE ? 'Native CoCo verified with local CLI + isolated fictional data.' : 'Local CLI + isolated data; native execution proof is pending.'),
  line('Public changes stay visit-only. Private Snowflake sync is pending.')
 ]);
 content(slides[3],[
@@ -100,15 +103,15 @@ content(slides[4],[
  section('Public source, checks and modular CoCo skills'),
  url('https://github.com/Cherie05/samvaad360'),
  line('Public reviews/conversations are simulations; real calls disabled.'),
- line('A separate actual CoCo CLI screen recording remains required.')
+ line(NATIVE ? 'Native CoCo result: COMPLETED / CALLBACK / simulate.' : 'A separate actual CoCo CLI screen recording remains required.')
 ]);
 const sharedSource='Participant-provided Prototype Submission Template _ CoCo CLI Hackathon GCC Edition.pptx; organizer branding retained.';
 const notes=[
  'Team name Glacier Queries and leader Arunvpp supplied by the participant. Team size '+SIZE+' confirmed separately. Track matches the participant portal.\n'+sharedSource,
  'The implemented scope is lending customer context and policy-aware recommendations. All demonstrated people and records are fictional. No measured churn/ROI improvement or market exclusivity claimed.\n'+sharedSource+'\nhttps://github.com/Cherie05/samvaad360/blob/main/samvaad/engine.py\nhttps://samvaad360.streamlit.app/',
- 'Public frontend is Python Streamlit. The dedicated Snowflake reader issues fixed read-only synthetic snapshot queries. Private FastAPI/SQLite flows persist locally; private Snowflake writer/outbox activation remains unconfigured. CoCo definitions are samvaad-evidence, samvaad-generate and samvaad-approved-runner; native full-workflow proof remains pending.\n'+sharedSource+'\nhttps://github.com/Cherie05/samvaad360/blob/main/public_app/repository.py\nhttps://github.com/Cherie05/samvaad360/blob/main/.cortex/skills/samvaad-evidence/SKILL.md\nhttps://github.com/Cherie05/samvaad360/blob/main/.cortex/skills/samvaad-generate/SKILL.md\nhttps://github.com/Cherie05/samvaad360/blob/main/.cortex/skills/samvaad-approved-runner/SKILL.md',
+ 'Public frontend is Python Streamlit. The dedicated Snowflake reader issues fixed read-only synthetic snapshot queries. Private FastAPI/SQLite flows persist locally; private Snowflake writer/outbox activation remains unconfigured. CoCo definitions are samvaad-evidence, samvaad-generate and samvaad-approved-runner. '+(NATIVE ? 'Native 1.1.87 executed all three in the owner terminal; returned trace matches isolated SQLite COMPLETED/CALLBACK/simulate, one attempt, completed 2026-10-06T16:23:35.422079Z. App-service controls remain authoritative; no native shell sandbox claim.' : 'Native full-workflow proof remains pending.')+'\n'+sharedSource+'\nhttps://github.com/Cherie05/samvaad360/blob/main/public_app/repository.py\nhttps://github.com/Cherie05/samvaad360/blob/main/.cortex/skills/samvaad-evidence/SKILL.md\nhttps://github.com/Cherie05/samvaad360/blob/main/.cortex/skills/samvaad-generate/SKILL.md\nhttps://github.com/Cherie05/samvaad360/blob/main/.cortex/skills/samvaad-approved-runner/SKILL.md',
  '557 tests passed in GitHub run 37490270245. Hosted browser report: 20 checks at 2026-10-06T15:47:55.069776Z. Private local browser: 6 checks at 2026-10-06T14:51:38.877300Z. These are functional prototype checks, not production certification. Shared budgets are application controls, not an account-wide credit cap or proof of Community Cloud per-IP enforcement. No real telephone call or loan change was performed.\n'+sharedSource+'\nhttps://github.com/Cherie05/samvaad360/actions/runs/37490270245\nhttps://github.com/Cherie05/samvaad360/blob/main/docs/production-readiness.md\nLocal evidence: output/cloud/public-browser/hosted/result.json; output/cloud/relationship-browser/result.json',
- 'Links point to the public deployed prototype and source. The product walkthrough is published at the release but currently lacks the required verified actual CoCo CLI segment. Participant portal receipt is pending.\n'+sharedSource+'\nhttps://samvaad360.streamlit.app/\nhttps://github.com/Cherie05/samvaad360\nhttps://github.com/Cherie05/samvaad360/releases/tag/hackathon-submission-2026',
+ 'Links point to the public deployed prototype and source. '+(NATIVE ? 'Owner supplied the actual native input, three SKILL loads, three POWERSHELL tool results and final callback summary. The stored action ID e2e19413-c7b0-4583-af6b-f52199122e66 and completion timestamp match the read-only database verification. This establishes native workflow execution separately from the required recording. No telephone call or financial change occurred.' : 'The published product walkthrough currently lacks the required verified actual CoCo CLI segment.')+' Participant portal receipt is pending.\n'+sharedSource+'\nhttps://samvaad360.streamlit.app/\nhttps://github.com/Cherie05/samvaad360\nhttps://github.com/Cherie05/samvaad360/releases/tag/hackathon-submission-2026',
  'Original closing artwork preserved without edits.\n'+sharedSource
 ];
 for (let i=0;i<slides.length;i++){
@@ -120,5 +123,5 @@ for (let i=0;i<slides.length;i++){
  await fs.writeFile(path.join(LAYOUT,`slide-${String(i+1).padStart(2,'0')}.layout.json`),await layout.text());
 }
 const pptx=await PresentationFile.exportPptx(p);
-await pptx.save(path.join(ROOT,'submission','Samvaad360_Official_Submission.pptx'));
+await pptx.save(path.join(ROOT,'submission',STEM+'.pptx'));
 console.log('Six organizer-template slides exported; original editable frames retained.');

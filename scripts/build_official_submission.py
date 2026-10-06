@@ -20,19 +20,23 @@ sys.path.insert(0, str(ROOT / '.local/submission-tools'))
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--team-size', required=True, type=int)
+    parser.add_argument('--basename', default='Samvaad360_Official_Submission')
+    parser.add_argument('--native-verified', action='store_true', help='Use only after actual native trace is corroborated with stored results.')
     args = parser.parse_args()
     if args.team_size < 1:
         parser.error('Team size must be positive and confirmed by participant.')
+    if not re.fullmatch(r'[A-Za-z0-9_-]+',args.basename):
+        parser.error('Invalid output basename.')
     script = BUILD / 'build_official_submission.mjs'
     shutil.copyfile(ROOT / 'scripts/build_official_submission.mjs', script)
-    subprocess.run([shutil.which('node'), str(script), str(ROOT), str(args.team_size)], cwd=BUILD, check=True)
-    qa = BUILD / 'final-preview'
+    subprocess.run([shutil.which('node'), str(script), str(ROOT), str(args.team_size),args.basename,'verified-native' if args.native_verified else 'unverified-native'], cwd=BUILD, check=True)
+    qa = BUILD / 'final-preview' / args.basename
     from reportlab.pdfgen import canvas
     from reportlab.lib.utils import ImageReader
     from PIL import Image
     from pypdf import PdfReader
     import fitz
-    target = ROOT / 'submission/Samvaad360_Official_Submission.pdf'
+    target = ROOT / 'submission' / (args.basename+'.pdf')
     pdf = canvas.Canvas(str(target), pagesize=(960,540), pageCompression=1)
     pdf.setTitle('Samvaad360 - Glacier Queries - Official Prototype Submission')
     pdf.setAuthor('Glacier Queries | Arunvpp')
@@ -51,7 +55,7 @@ def main():
     with fitz.open(target) as doc:
         for n,page in enumerate(doc,1):
             page.get_pixmap(matrix=fitz.Matrix(1.5,1.5)).save(str(qa / f'pdf-page-{n:02}.png'))
-    pptx=ROOT / 'submission/Samvaad360_Official_Submission.pptx'
+    pptx=ROOT / 'submission' / (args.basename+'.pptx')
     inspect_dump=Path(str(pptx)+'.inspect.ndjson')
     if inspect_dump.exists():
         inspect_dump.replace(BUILD / inspect_dump.name)
@@ -68,8 +72,8 @@ def main():
         image.thumbnail((480,270))
         sheet.paste(image,(10+(i%2)*490,10+(i//2)*280))
     sheet.save(qa / 'contact-sheet.png')
-    data={'team_name':'Glacier Queries','team_leader':'Arunvpp','team_size':args.team_size,'template':'Participant-provided official PPTX','slide_count':6,'pdf_bytes':target.stat().st_size,'pdf_under_5mb':True,'pptx_bytes':pptx.stat().st_size,'pdf_sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'pptx_sha256':hashlib.sha256(pptx.read_bytes()).hexdigest(),'native_coco_video_verified':False,'portal_submitted':False,'visual_qa':'Pending individual inspection.'}
-    (BUILD / 'build-result.json').write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8')
+    data={'basename':args.basename,'team_name':'Glacier Queries','team_leader':'Arunvpp','team_size':args.team_size,'template':'Participant-provided official PPTX','slide_count':6,'pdf_bytes':target.stat().st_size,'pdf_under_5mb':True,'pptx_bytes':pptx.stat().st_size,'pdf_sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'pptx_sha256':hashlib.sha256(pptx.read_bytes()).hexdigest(),'native_coco_workflow_verified':args.native_verified,'native_coco_video_verified':False,'portal_submitted':False,'visual_qa':'Pending individual inspection.'}
+    (BUILD / (args.basename+'-result.json')).write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(data,indent=2))
 
 if __name__=='__main__':

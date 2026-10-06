@@ -1,13 +1,15 @@
-Samvaad 360 is a working **Customer 360 and Next Best Action Engine** prototype for lending.
+Samvaad360 is a verified **Customer 360 and Next Best Action Engine** lending prototype by **Glacier Queries / Arunvpp / team size 1**.
 
 - **[Live public prototype](https://samvaad360.streamlit.app/)**
-- **[Public source, setup and judge walkthrough](https://github.com/Cherie05/samvaad360)**
-- **[Submission fields and current completion status](https://github.com/Cherie05/samvaad360/blob/main/docs/submission-guide.md)**
+- **[Public source and judge walkthrough](https://github.com/Cherie05/samvaad360)**
+- **[Final submission guide](https://github.com/Cherie05/samvaad360/blob/main/docs/submission-guide.md)**
+- **[Final silent 3:42 demo video](https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_CoCo_Submission.mp4)**
+- **[Final organizer-template PDF](https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission_Final.pdf)**
 
-**Upload `Samvaad360_Official_Submission.pdf` to the participant portal.** It has six pages, is 3.12 MB (below 5 MB), follows the provided organizer template and includes **Glacier Queries / Arunvpp / team size 1**. Its editable PowerPoint is also available. All slides/pages and template fidelity were checked. The earlier ten-slide custom deck is retained as supplementary product material.
+Upload **`Samvaad360_Official_Submission_Final.pdf`**: six pages, 3,113,560 bytes, below 5 MB. It follows the participant-supplied organizer template; all pages and template fidelity were checked. The final editable PowerPoint is available.
 
-The **4:12 actual public-site walkthrough** shows the genuine Snowflake source, cited evidence, review gates, hardship handoff, onboarding, validated imports and contact withdrawal. Playback is accelerated to 1.4×; the recorded application outcomes are real synthetic workflows.
+Paste the **CoCo_Submission** video link into the portal. It contains the participant's actual native CoCo recording (1×) and actual public Snowflake-backed website UI (labelled 1.4×). **All audio is removed.** Evidence, recommendation and approved-runner capabilities show real input, tool processing and returned output. The stored synthetic callback is COMPLETED/CALLBACK/simulate, one attempt. The recorded rerun explicitly demonstrates idempotency, without a new call or duplicate.
 
-**Remaining submission requirement:** the video demonstrates the website and does not include a verified native CoCo CLI workflow. An actual 3–5 minute CoCo input → processing → output recording with 2–3 modular skills is still needed for full video compliance. No successful participant-portal submission or receipt is recorded.
+Runtime validation: 557 CI tests, 20 hosted-browser checks and six private local relationship checks. Public exercises are visit-only and the restricted backend reads 20 fictional customers. Production identity/storage, private relationship cloud publishing and carrier acceptance remain rollout gates. No real calls, SMS or financial changes were performed.
 
-The prior product release passed **557 CI tests, 20 anonymous hosted-browser checks and six private relationship browser checks**. New submission packaging has separate checks recorded in the repository guide. Public exercises are visit-only; the shared backend serves 20 fictional Snowflake customers. The private operational portal persists locally in SQLite. Real calls, SMS and financial changes are disabled; private relationship cloud publishing and production identity are pending. This is a prototype release, not a production certification.
+Older official/custom decks and the narrated website-only video are preserved as supplementary historical assets. Use the **Final** PDF and **CoCo_Submission** MP4 for the participant submission. No successful portal receipt is recorded; submit both modules before the supplied deadline.

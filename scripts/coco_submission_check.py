@@ -53,7 +53,7 @@ def _isolated_status():
     con = sqlite3.connect(target.as_uri() + "?mode=ro", uri=True)
     con.row_factory = sqlite3.Row
     try:
-        row = con.execute("SELECT action_id,status,approval_role,action_code FROM actions WHERE customer_id='C0001' ORDER BY created_at DESC LIMIT 1").fetchone()
+        row = con.execute("SELECT action_id,status,outcome,execution_mode,attempts,completed_at,approval_role,action_code FROM actions WHERE customer_id='C0001' ORDER BY created_at DESC LIMIT 1").fetchone()
         return {"prepared": True, "database_changed": False,
                 "fictional_customer_count": con.execute("SELECT COUNT(*) FROM customers").fetchone()[0],
                 "callback_action": dict(row) if row else None,
