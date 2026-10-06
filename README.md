@@ -37,7 +37,7 @@ The public backend reads **20 seeded fictional customers from Snowflake**. Publi
 
 | Gate | Observed result |
 | --- | --- |
-| [GitHub tests and private app deployment](https://github.com/Cherie05/samvaad360/actions/runs/37483107870) | **557 tests passed**; deployment verified 20 customers and live files. |
+| [GitHub tests and private app deployment](https://github.com/Cherie05/samvaad360/actions/runs/37490270245) | **557 tests passed**; deployment verified 20 customers and live files. |
 | Hosted public browser | **20 checks passed**, including onboarding/import, requests/opt-out, visitor isolation and mobile layout. |
 | Private local relationship browser | **6 end-to-end checks passed** over persistent staff/API/customer forms. |
 

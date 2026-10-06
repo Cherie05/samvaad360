@@ -19,7 +19,7 @@ The owner-provided participant form lists **6 October 2026, 11:59 PM IST**. The 
 
 ## Copy-ready Prototype/MVP brief
 
-Copy only the following paragraph; it fits the 1024-character field limit:
+Copy only the following paragraph. It is **928 characters**, below the 1024-character field limit:
 
 Samvaad 360 is a lender Customer 360 and Next Best Action prototype joining loan/payment facts with emails, chats and call transcripts. Six public workspaces explain portfolio priorities, customer journeys, policy contributions and cited recommendations. Review-gated conversations adapt to hardship and opt-out, stopping stale growth proposals. Customer hub rehearses onboarding, imports and servicing; the private SQLite portal persists intake/review, source links, versioned imports, cases and preference withdrawals. A restricted Snowflake reader serves 20 seeded fictional customers through shared budgeted snapshots; public changes remain visit-only. Verified: 557 CI tests, 20 hosted-browser checks and 6 private local workflow checks. Real calling is disabled, private Snowflake sync is unconfigured, and production identity is pending. A product walkthrough is published; native CoCo workflow recording remains pending.
 
@@ -38,8 +38,8 @@ The private local Relationship hub/API has a separate durable workflow: applican
 
 | Evidence | Verified scope |
 | --- | --- |
-| [GitHub run 37483107870](https://github.com/Cherie05/samvaad360/actions/runs/37483107870) | **557 tests / 81.51 seconds**, source `7a619e718508777ee491bcf78309b0b2a8f0d7c3`; deployment job `112337447935` verified 20 customers and `LIVE_VERSION_READY`. |
-| Hosted public browser | **20 checks** at `2026-10-06T15:00:27.839489Z`; genuine Snowflake source, seeded 20-customer cohort, six workspaces and new relationship exercises. Hosting does not directly expose its commit. |
+| [GitHub run 37490270245](https://github.com/Cherie05/samvaad360/actions/runs/37490270245) | **557 tests / 75.62 seconds**, source `7e8cdc63805efde662bbc300dede0f33ce5cff07`; deployment job `112362108238` verified 20 customers and `LIVE_VERSION_READY`. |
+| Hosted public browser | **20 checks** at `2026-10-06T15:47:55.069776Z`; genuine Snowflake source, seeded 20-customer cohort, six workspaces and new relationship exercises. Hosting does not directly expose its commit. |
 | Local public browser | **20 checks** at `2026-10-06T14:59:04.862553Z`. |
 | Private local relationship browser | **6 checks** at `2026-10-06T14:51:38.877300Z`; persistent SQLite staff/API/customer forms. |
 | Local automated validation | Full **555 / 78.18 seconds**, followed by **14 targeted tests** including two new engine fact cases. CI covers the complete 557-test suite. |

@@ -6,7 +6,7 @@ The required video must show **CoCo CLI Input → Processing → Output**, one c
 
 ## Prepare the recording
 
-Open the [public app](https://samvaad360.streamlit.app/), [CI run](https://github.com/Cherie05/samvaad360/actions/runs/37483107870) and private local staff UI at `http://127.0.0.1:8501`. The separate API is `http://127.0.0.1:8000/docs`. Work only with fictional fixtures. Keep private credentials, MFA, hosting secrets, capability tokens and personal records outside the recording.
+Open the [public app](https://samvaad360.streamlit.app/), [CI run](https://github.com/Cherie05/samvaad360/actions/runs/37490270245) and private local staff UI at `http://127.0.0.1:8501`. The separate API is `http://127.0.0.1:8000/docs`. Work only with fictional fixtures. Keep private credentials, MFA, hosting secrets, capability tokens and personal records outside the recording.
 
 For the CoCo segment, the installed executable reports 1.1.87; earlier native discovery verified the three original project skills. The submission package adds a separate read-only evidence skill. Actual account/model authentication, skill invocation and hook execution remain **unverified**. Establish those before recording a claimed CoCo workflow. A terminal listing demonstrates discovery, not execution. Refer to the [official CoCo CLI documentation](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-cli) and the installed version's help for its connection/login interface.
 

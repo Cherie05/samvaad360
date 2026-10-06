@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-10-06T15:45:38.763807+00:00",
+  "updated_at_utc": "2026-10-06T15:52:00.279801+00:00",
   "scope": "Submission packaging; distinguish preparation from organizer compliance and actual submission",
   "public_repository": "https://github.com/Cherie05/samvaad360",
   "public_website": "https://samvaad360.streamlit.app/",
@@ -53,5 +53,72 @@
       "bytes": 8845231,
       "sha256": "e85852641a0a85d89d65f6b56c703aec5a876a8f2fb0bed5e7022bc77ebd050c"
     }
-  ]
+  ],
+  "submission_source_commit": "7e8cdc63805efde662bbc300dede0f33ce5cff07",
+  "submission_ci": {
+    "run": "https://github.com/Cherie05/samvaad360/actions/runs/37490270245",
+    "status": "success",
+    "passed": 557,
+    "seconds": 75.62,
+    "deployment_job": 112362108238,
+    "live_version_ready": true,
+    "private_cloud_customer_count": 20
+  },
+  "submission_hosted_browser": {
+    "passed": 20,
+    "checked_at_utc": "2026-10-06T15:47:55.069776Z",
+    "live_snowflake_verified": true,
+    "real_call_placed": false
+  },
+  "anonymous_public_assets": {
+    "checked_at_utc": "2026-10-06T15:48:05.559208+00:00",
+    "authenticated_requests": false,
+    "assets": [
+      {
+        "name": "Samvaad360_Prototype_Deck.pdf",
+        "http": 200,
+        "bytes": 625215,
+        "sha256_matches": true
+      },
+      {
+        "name": "Samvaad360_Prototype_Deck.pptx",
+        "http": 200,
+        "bytes": 368771,
+        "sha256_matches": true
+      },
+      {
+        "name": "Samvaad360_Demo.mp4",
+        "http": 200,
+        "bytes": 8845231,
+        "sha256_matches": true
+      }
+    ],
+    "status": "PASSED"
+  },
+  "live_package": {
+    "checked_at_utc": "2026-10-06T15:51:06.264029+00:00",
+    "authentication_used": false,
+    "public_judge_guide_verified": true,
+    "data_source": "Data source: Snowflake",
+    "anonymous_video_playback": {
+      "seconds": 251.514,
+      "currentTime": 162.465501,
+      "width": 1440,
+      "height": 900,
+      "paused": false,
+      "error": null
+    },
+    "status": "PASSED"
+  },
+  "coco_current_status": {
+    "native_version": "1.1.87",
+    "oauth_setup_completed_by_owner": true,
+    "three_demo_skills_discovered": true,
+    "callback_state": "APPROVED",
+    "observed_hook_operations": [
+      "ask"
+    ],
+    "full_workflow_verified": false,
+    "model_smoke": "Exit 1 with no assistant response in separate process; native completion remains unverified"
+  }
 }
