@@ -340,7 +340,7 @@ class LocalService:
             action = self._action(con, action_id)
             self._log(con, "EXECUTION_STARTED", action["customer_id"], action_id, actor.user_id,
                       {"mode": mode, "attempt": action["attempts"]})
-            if outcome not in {"NO_ANSWER", "FAILED", "OPT_OUT", "DECLINE"} and action["approval_role"] in {"MANAGER", "CREDIT"}:
+            if outcome not in {"NO_ANSWER", "FAILED", "OPT_OUT", "DECLINE"} and action["action_code"] in {"RETENTION_RATE_MATCH_CALL", "TOPUP_PREAPPROVAL_CALL"}:
                 self._create_offer(con, action)
                 con.execute("UPDATE offers SET status='SIMULATED_DELIVERY' WHERE action_id=?", (action_id,))
                 self._log(con, "DELIVERY_SIMULATED", action["customer_id"], action_id, actor.user_id,
@@ -450,6 +450,8 @@ class LocalService:
         return offer
 
     def _check_offer_consent(self, con, offer):
+        if offer["status"] == "REVOKED":
+            raise ActionError("OFFER_REVOKED", "The invitation was withdrawn after the relationship changed.")
         customer = self._customer(con, offer["customer_id"])
         if not customer["consent_calls"] or not customer["consent_marketing"] and offer["offer_type"] == "TOPUP":
             raise ActionError("OFFER_REVOKED", "The invitation was withdrawn after consent changed.")
@@ -557,6 +559,18 @@ class LocalService:
     def reset_demo(self, actor):
         self._authorize(actor, {"ADMIN"})
         with self._db(write=True) as con:
+            existing = {row[0] for row in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+            if "telephony_calls" in existing and con.execute(
+                    "SELECT 1 FROM telephony_calls WHERE status NOT IN ('completed','failed','busy','no-answer','canceled') LIMIT 1").fetchone():
+                raise ActionError("ACTIVE_CALLS", "Reconcile or cancel existing carrier calls before resetting demo records.")
+            # Remove optional child records before their operational parents.
+            # Names are a fixed allowlist, never supplied by a browser or import.
+            for table in ("relationship_onboarding_invites", "relationship_portal_invites", "relationship_outbox", "relationship_review_evidence",
+                          "relationship_sources", "relationship_cases", "relationship_profiles", "relationship_onboardings",
+                          "relationship_requests", "relationship_sync_runs", "telephony_events", "telephony_turns",
+                          "telephony_calls", "telephony_recipients", "voice_events", "voice_turns", "voice_sessions"):
+                if table in existing:
+                    con.execute("DELETE FROM " + table)
             for table in ("response_events", "offers", "actions", "interactions", "payments", "loans", "customers", "catalogue", "audit_log"):
                 con.execute("DELETE FROM " + table)
         return self.seed_demo(actor)

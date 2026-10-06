@@ -18,6 +18,8 @@ from public_app.security import PublicGuard
 from public_app.ui.call_audio import render_browser_voice
 from public_app.ui.charts import render_driver_chart, render_governance, render_intervention_matrix, render_portfolio_charts, render_relationship_timeline
 from public_app.ui.telephone import render_telephone
+from public_app.ui.relationship import PublicRelationshipSandbox, render_relationship_hub
+from public_app.relationship_repository import VisitRelationshipReader
 from public_app.ui.visuals import CSS, chip, date_label, empty_state, evidence_card, fields, metric_grid, money, safe, section
 
 st.set_page_config(page_title="Samvaad 360 | Lending command center", page_icon="◉", layout="wide")
@@ -52,19 +54,24 @@ def reader():
                                  usage_guard(), refresh_seconds=3600)
 
 
-@st.cache_data(ttl=300, max_entries=2, show_spinner=False)
 def customers(source):
-    return reader().customers()
+    return visit_reader().customers()
 
 
-@st.cache_data(ttl=300, max_entries=2, show_spinner=False)
 def portfolio_profiles(source):
-    return reader().portfolio_profiles()
+    return visit_reader().portfolio_profiles()
 
 
-@st.cache_data(ttl=300, max_entries=100, show_spinner=False)
 def profile(customer_id, source):
-    return reader().customer360(customer_id)
+    return visit_reader().customer360(customer_id)
+
+
+def relationship_sandbox():
+    return PublicRelationshipSandbox(st.session_state.setdefault("public_relationship_state", {}), reader().customers())
+
+
+def visit_reader():
+    return VisitRelationshipReader(reader(), relationship_sandbox())
 
 
 def html(markup):
@@ -78,14 +85,15 @@ def open_workspace(customer_id, tab="Customer 360"):
 
 def queue_action(customer_id):
     def action():
-        ReviewSandbox(st.session_state["public_reviews"], reader()).request(customer_id)
+        ReviewSandbox(st.session_state["public_reviews"], visit_reader()).request(customer_id)
         st.session_state["public_flash"] = "Recommendation added. Review the proposal, then try the call simulation."
     run_visit_action("Review queue", action)
 
 
-def run_visit_action(tab, action):
+def run_visit_action(tab, action, *, select_tab=True):
     """Apply a visit action before Streamlit chooses which tab to render."""
-    st.session_state["workspace_tabs"] = tab
+    if select_tab:
+        st.session_state["workspace_tabs"] = tab
     try:
         admission = usage_guard().admit(visitor_identity(), kind="action")
         if not admission.allowed:
@@ -99,9 +107,15 @@ def run_visit_action(tab, action):
         st.session_state["public_flash_error"] = "This operation could not complete. Please try again. Connection details remain private."
 
 
+def run_relationship_action(tab, action):
+    # Relationship forms execute inside their already selected tab. Changing
+    # its widget state here is forbidden after Streamlit has instantiated it.
+    run_visit_action(tab, action, select_tab=False)
+
+
 def ask_evidence(customer_id):
     def action():
-        result = reader().answer(customer_id, st.session_state["public_question_text"])
+        result = visit_reader().answer(customer_id, st.session_state["public_question_text"])
         st.session_state["public_answer"] = {"customer_id": customer_id, **result}
     run_visit_action("Evidence desk", action)
 
@@ -115,7 +129,7 @@ def compare_interventions(customer_id, source):
 
 def save_review(request_id):
     def action():
-        ReviewSandbox(st.session_state["public_reviews"], reader()).review(
+        ReviewSandbox(st.session_state["public_reviews"], visit_reader()).review(
             request_id, st.session_state["review_outcome_" + request_id], st.session_state["review_note_" + request_id])
         st.session_state["public_review_open"] = request_id
     run_visit_action("Review queue", action)
@@ -123,7 +137,7 @@ def save_review(request_id):
 
 def call_action(action_name, customer_or_session, text=None, field_key=None):
     def action():
-        studio = CallSandbox(st.session_state["public_calls"], reader(), st.session_state["public_reviews"])
+        studio = CallSandbox(st.session_state["public_calls"], visit_reader(), st.session_state["public_reviews"])
         if action_name == "start":
             studio.start(customer_or_session)
         elif action_name == "reply":
@@ -156,6 +170,9 @@ def review_role(role):
 
 
 def visit_hold(customer_id):
+    preferences = st.session_state.get("public_relationship_state", {}).get("preferences", {}).get(customer_id, {})
+    if preferences.get("dnd") or preferences.get("consent_calls") is False:
+        return "Contact permission was withdrawn in Customer hub. Further contact is held for this visit."
     state = st.session_state.get("public_calls", {})
     if customer_id in state.get("suppressed_contacts", []):
         return "The borrower opted out in this visit. Further conversation rehearsals are blocked."
@@ -309,6 +326,8 @@ def render_command_center(source):
 
 
 def render_customer(view):
+    if view.get("rehearsal"):
+        st.info("Visit-only relationship · Created or updated in Customer hub. Shared Snowflake records remain separate.")
     customer, metrics = view["customer"], view["metrics"]
     analytics = customer_analytics(view)
     initials = ''.join(word[0] for word in customer["full_name"].split()[:2])
@@ -586,7 +605,7 @@ try:
     if not admission.allowed:
         st.warning(f"This workspace is receiving too many requests. Try again in {admission.retry_after} seconds.")
         st.stop()
-    repository = reader()
+    repository = visit_reader()
     source = "snowflake" if repository.is_live else "snapshot"
     portfolio = customers(source)
 except Exception as error:
@@ -606,7 +625,11 @@ with st.sidebar:
     else:
         st.warning("Data source: offline synthetic snapshot")
         st.caption("Snapshot reference: " + repository.reference)
-    html(f'<div class="sidebar-note">{len(portfolio)} fictional customers<br>Shared hourly snapshot · usage protected</div>')
+    shared_count = len(reader().customers())
+    visit_count = len(relationship_sandbox().state.get("customers", {}))
+    html(f'<div class="sidebar-note">{shared_count} shared fictional customers'
+         + (f' + {visit_count} visit-only relationships' if visit_count else '')
+         + '<br>Shared hourly snapshot · usage protected</div>')
     status = repository.source_status() if hasattr(repository, "source_status") else {}
     if status.get("stale"):
         st.caption("Last successful Snowflake snapshot. Refresh is paused; saved facts remain browsable.")
@@ -636,7 +659,7 @@ sandbox = ReviewSandbox(st.session_state["public_reviews"], repository)
 call_sandbox = CallSandbox(st.session_state["public_calls"], repository, st.session_state["public_reviews"])
 
 try:
-    tabs = st.tabs(["Command center", "Customer 360", "Evidence desk", "Review queue", "Call studio"],
+    tabs = st.tabs(["Command center", "Customer 360", "Evidence desk", "Review queue", "Call studio", "Customer hub"],
                    default=st.session_state.get("workspace_tabs", "Command center"),
                    key="workspace_tabs", on_change="rerun")
     if tabs[0].open:
@@ -656,6 +679,10 @@ try:
         if tabs[4].open:
             with tabs[4]:
                 render_call(view, call_sandbox)
+        if tabs[5].open:
+            with tabs[5]:
+                render_relationship_hub(reader(), sandbox=relationship_sandbox(), run_action=run_relationship_action,
+                                        selected_cid=st.session_state["selected_customer"])
 except DemoError as error:
     st.error(str(error))
 except Exception as error:

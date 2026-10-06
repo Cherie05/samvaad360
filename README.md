@@ -14,6 +14,16 @@ The enterprise extension adds exposure/action charts, a repayment/conversation t
 
 Telephone calling now has a genuine Twilio API integration and staff-only controls for existing or additional verified numbers. It is disabled until the provider, HTTPS API, permitted recipients and staff login are configured. The service validates signed callbacks and current approvals, holds uncertain dispatches instead of redialing, and stores controlled-pilot outcomes in SQLite. No real call or SMS has been sent, and production readiness remains false. See [real telephone setup](docs/real-telephony-pilot.md).
 
+## Customer onboarding and synchronization
+
+The relationship extension adds a sixth **Customer hub** public workspace and a sixth **Relationship hub** private local workspace. The public hub rehearses fictional onboarding, source imports and service requests within that visit. Its new relationships can be inspected through Customer 360 and the evidence workspaces, without adding contacts to the shared Snowflake dataset. The 400-test/15-browser-check evidence above describes the preceding published release; this extension has its own release verification.
+
+The private hub/API persist applicant invitations, intake, staff identity/document attestations, manager review, customer records, reviewed source-ID links, bounded CSV/JSON preview/commit, service cases and customer preference withdrawals. An applicant can complete their own limited form at an expiring `/portal/{token}` link. Existing-customer links permit scoped requests and opt-out, without exposing balances or performing financial changes. Staff review flags are attestations; no external KYC result is fabricated.
+
+**The current 20 Snowflake customers are seeded fictional records, not an automatically synced lender CRM.** The new private import adapter validates source IDs, increasing versions and customer/loan references before changing the operational SQLite database. Existing customers can be linked explicitly to lender source IDs, so their imported loans and conversations remain in the same relationship. Replayed records do not create duplicates, and materially changed evidence requires fresh action review.
+
+A transactional outbox and genuine optional Snowflake worker project private customer state into `SAMVAAD_STAGING.RELATIONSHIP`, using a dedicated writer role and bounded manual batches. Its private credentials/schema are not activated; default inspection makes no connection. It never publishes real contacts into `PUBLIC_DEMO`. Continuous LMS/CRM ingestion, production identity and PostgreSQL remain deployment work. See [the end-to-end customer relationship plan](docs/customer-relationship-plan.md).
+
 ## Hackathon cloud account setup
 
 The separate Snowflake-hosted demo is packaged for `ZYLTUKM-HU63768` / `ARUNVPP24`. Run this from the workspace in your own PowerShell terminal; enter password/MFA only in its hidden local prompts:
@@ -35,7 +45,9 @@ The [GitHub deployment](docs/github-deployment.md) passes **400 tests**, authent
 | Staff browser frontend | Streamlit 1.65+ and local CSS/system fonts | `app/streamlit_app.py`, `app/voice_ui.py`; http://127.0.0.1:8501 |
 | Application backend | Python domain service, bounded rules and evidence answers | `samvaad/service.py`, `engine.py`, `signals.py`, `knowledge.py` |
 | REST API and customer invitation pages | FastAPI and Uvicorn | `webhook/main.py`, `voice_routes.py`; http://127.0.0.1:8000/docs |
+| Customer relationship portal | Streamlit staff hub, FastAPI scoped HTML/API, versioned CSV/JSON adapter | `app/relationship_ui.py`, `webhook/relationship_routes.py`, `samvaad/relationship.py` |
 | Local operational database | SQLite, WAL, transactional writes and enforced keys | `.local/samvaad.db`; shared by frontend, API and CLI |
+| Private relationship analytics sync | Leased outbox and parameterized Snowflake version/hash projection | `cloud/relationship_sync.py`; `scripts/relationship_sync.py --apply` only after separate private configuration |
 | Voice conversation engine | Persisted permission/identity/dialogue states | `samvaad/voice.py` |
 | Local audio | Installed Windows SAPI voice; faster-whisper CPU INT8 recognition | `samvaad/voice_audio.py`; pinned model in `.local/models/whisper-base` |
 | Automation | Python CLI and prepared CoCo skills/hook | `tools/cli.py`, `.cortex/`; actual CoCo runtime remains unverified |
@@ -81,6 +93,7 @@ The lock file captures the installed Windows/Python 3.11 environment, including 
 6. **Microphone / WAV:** In an active voice session select this input, record fictional borrower speech or upload a PCM WAV (60 seconds / 10 MB maximum), transcribe locally, review the text, and explicitly submit it. Text input remains available. Browser microphone permission is required.
 7. **New evidence:** For Kabir C0007 generate a reminder, then add `Customer: I lost my job and cannot pay my EMI. Please help.` The decision changes to hardship support and replaces the old recommendation. New hardship during a voice conversation also suppresses financial invitations.
 8. **Consent:** Record an opt-out or say `Do not call me again` in a local session. Consent changes persist and affected contacts are cancelled. Negative and conditional replies do not count as acceptance.
+9. **Relationship hub:** Create an applicant intake as Meera or issue its private form link. As Arjun, record review attestations, approve the prospect and link the lender source ID. Switch to Meera or the local admin to preview/commit fictional loan, payment and conversation rows, then inspect the same customer in Customer 360. Add and resolve a service case; issue a customer link and withdraw contact through its form. See the [acceptance workflow](docs/customer-relationship-plan.md#a-complete-acceptance-workflow) for source version/replay checks.
 
 The operator selector simulates identities on this laptop; production login is pending. The assistant can queue a recommendation but cannot approve it. A voice outcome records a synthetic customer preference; it does not change loan terms.
 

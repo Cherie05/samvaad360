@@ -9,6 +9,7 @@ from streamlit.testing.v1 import AppTest
 from cloud.config import CloudError, WORKSPACE
 from public_app import repository as public
 from public_app import security as public_security
+from public_app.relationship_repository import VisitRelationshipReader
 from scripts import setup_public_cloud as setup
 from samvaad.signals import extract_signals
 from test_trial_cloud import Session
@@ -237,7 +238,7 @@ def public_ui(reader, monkeypatch, tmp_path):
 def test_anonymous_website_renders_and_runs_review_simulation(public_ui):
     app, reader = public_ui
     app.run()
-    assert not app.exception and len(app.tabs) == 5
+    assert not app.exception and len(app.tabs) == 6
     assert not any("Signed in" in str(m.value) for m in app.markdown)
     app.session_state["workspace_tabs"] = "Customer 360"
     next(s for s in app.selectbox if s.label == "Customer").select("C0003").run()
@@ -253,7 +254,7 @@ def test_public_ui_hides_provider_messages_and_private_credentials(public_ui, mo
     app.run()
     app.session_state["workspace_tabs"] = "Evidence desk"
     app.run()
-    monkeypatch.setattr(public.GuardedSnapshotReader, "answer", lambda *_a, **_k: (_ for _ in ()).throw(RuntimeError("PRIVATE_PROVIDER_CREDENTIAL")))
+    monkeypatch.setattr(VisitRelationshipReader, "answer", lambda *_a, **_k: (_ for _ in ()).throw(RuntimeError("PRIVATE_PROVIDER_CREDENTIAL")))
     next(b for b in app.button if b.label == "Find the evidence").click().run()
     assert not app.exception and app.error
     assert "PRIVATE_PROVIDER_CREDENTIAL" not in caplog.text + " ".join(e.value for e in app.error)
@@ -281,6 +282,6 @@ def test_unavailable_backend_renders_an_explicit_offline_website(public_ui, monk
     app, _ = public_ui
     monkeypatch.setattr(public, "connect_reader", lambda *_: (_ for _ in ()).throw(RuntimeError("PRIVATE_PROVIDER_CREDENTIAL")))
     app.run()
-    assert not app.exception and len(app.tabs) == 5
+    assert not app.exception and len(app.tabs) == 6
     assert any("bundled fictional snapshot" in e.value for e in app.warning)
     assert "PRIVATE_PROVIDER_CREDENTIAL" not in caplog.text

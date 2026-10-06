@@ -40,6 +40,19 @@ def test_hardship_suppresses_growth_even_with_topup_interest():
     assert not result["offer"]
 
 
+@pytest.mark.parametrize("borrower_text,job_loss", [
+    ("Borrower: I lost my job and cannot afford repayments.", True),
+    ("Borrower: A medical emergency means I cannot afford repayments.", False),
+])
+def test_support_rationale_describes_only_the_recorded_hardship_reason(borrower_text, job_loss):
+    customer, loans, payments = fixtures()
+    loans[0]["current_dpd"] = 9
+    result = decide(customer, loans, payments, [interaction(borrower_text)])
+    assert result["action_code"] == "HARDSHIP_RESTRUCTURE_CALL"
+    assert ("job-loss" in result["rationale"]) is job_loss
+    assert not result["offer"]
+
+
 @pytest.mark.parametrize("flag", ["dnd", "consent_calls", "consent_marketing"])
 def test_contact_and_marketing_exclusions_suppress_topup(flag):
     customer, loans, payments = fixtures()

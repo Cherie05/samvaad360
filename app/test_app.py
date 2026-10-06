@@ -56,7 +56,7 @@ def test_local_portal_shows_accurate_provider_and_customer_scope(portal):
     assert "Deterministic offline analysis" in rendered
     assert "Ananya" in rendered
     assert [tab.label for tab in page.tabs] == [
-        "Customer 360", "Approvals & execution", "Ask Samvaad", "Action history", "Voice lab"
+        "Customer 360", "Approvals & execution", "Ask Samvaad", "Action history", "Voice lab", "Relationship hub"
     ]
 
 

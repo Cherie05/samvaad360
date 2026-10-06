@@ -27,6 +27,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field
 
 from samvaad.factory import create_service
+from samvaad.models import ActionError
 
 WORKSPACE = Path(__file__).resolve().parents[1]
 ALLOWED_USERS = frozenset({"arjun", "kavya", "meera", "farah", "local-runner", "demo-admin"})
@@ -137,7 +138,7 @@ def create_app(service=None, token_map: dict[str, str] | None = None, telephony=
         permitted = {"http://localhost:8501", "http://127.0.0.1:8501"}
         if not set(allowed_origins).issubset(permitted):
             raise RuntimeError("Local CORS origins must be localhost:8501 or 127.0.0.1:8501.")
-        app.add_middleware(CORSMiddleware, allow_origins=allowed_origins, allow_methods=["GET", "POST"], allow_headers=["Authorization", "Content-Type"], allow_credentials=False)
+        app.add_middleware(CORSMiddleware, allow_origins=allowed_origins, allow_methods=["GET", "POST"], allow_headers=["Authorization", "Content-Type", "Idempotency-Key"], allow_credentials=False)
 
     @app.middleware("http")
     async def response_headers(request: Request, call_next):
@@ -146,14 +147,19 @@ def create_app(service=None, token_map: dict[str, str] | None = None, telephony=
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["X-Frame-Options"] = "DENY"
+        if request.url.path.startswith("/portal/"):
+            response.headers["Content-Security-Policy"] = (
+                "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; "
+                "frame-ancestors 'none'; base-uri 'none'")
         return response
 
     @app.exception_handler(Exception)
+    @app.exception_handler(ActionError)
     async def handle_error(request: Request, exc: Exception):
         code = getattr(exc, "code", None)
         if code:
             normalized = str(code).upper()
-            codes = {"NOT_FOUND": 404, "FORBIDDEN": 403, "UNAUTHORIZED": 403, "UNKNOWN_ACTOR": 403, "EXPIRED": 410, "OFFER_REVOKED": 410, "LIVE_NOT_CONFIGURED": 503}
+            codes = {"NOT_FOUND": 404, "PORTAL_UNAVAILABLE": 404, "FORBIDDEN": 403, "UNAUTHORIZED": 403, "UNKNOWN_ACTOR": 403, "EXPIRED": 410, "OFFER_REVOKED": 410, "LIVE_NOT_CONFIGURED": 503}
             status = 404 if normalized.endswith("_NOT_FOUND") else 410 if normalized.endswith("_EXPIRED") else 503 if normalized.endswith("_NOT_CONFIGURED") else codes.get(normalized, 409)
             return JSONResponse(status_code=status, content={"error": str(code), "message": str(exc)})
         # Never expose exception internals, secrets, or customer payloads in HTTP errors.
@@ -179,6 +185,10 @@ def create_app(service=None, token_map: dict[str, str] | None = None, telephony=
     telephone = telephony or TelephonyService(service)
     app.state.telephony = telephone
     app.include_router(build_telephony_router(service, actor, telephone))
+    from webhook.relationship_routes import build_relationship_router
+    relationship_router, relationship = build_relationship_router(service, actor)
+    app.state.relationship = relationship
+    app.include_router(relationship_router)
 
     @app.get("/health")
     def health():

@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
 from samvaad.factory import create_service
 from samvaad.models import Actor, ActionError
 from app.voice_ui import render_voice_lab
+from app.relationship_ui import render_staff_relationship
 
 logger = logging.getLogger("samvaad.ui")
 
@@ -556,7 +557,7 @@ def main() -> None:
         p4.metric("Awaiting approval", portfolio.get("pending_approval", portfolio.get("pending_approvals", "—")))
         view = service.customer360(selected_id)
         customer = view.get("customer") or customer_map[selected_id]
-        borrower, approvals, ask, history, voice = st.tabs(["Customer 360", "Approvals & execution", "Ask Samvaad", "Action history", "Voice lab"], key="workspace_tab", on_change="rerun")
+        borrower, approvals, ask, history, voice, relationship = st.tabs(["Customer 360", "Approvals & execution", "Ask Samvaad", "Action history", "Voice lab", "Relationship hub"], key="workspace_tab", on_change="rerun")
         with borrower:
             borrower_view(service, selected_id, actor, view, is_demo)
         with approvals:
@@ -567,6 +568,8 @@ def main() -> None:
             history_view(service, selected_id)
         with voice:
             render_voice_lab(service, selected_id, actor, is_demo)
+        with relationship:
+            render_staff_relationship(service, actor)
     except Exception as error:
         show_error(error)
     st.divider()

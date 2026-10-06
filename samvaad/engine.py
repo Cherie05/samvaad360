@@ -137,7 +137,8 @@ def decide_customer(customer: dict, metrics: dict, interactions: list, catalogue
         rationale = f"{name} expressed top-up interest and meets the illustrative repayment and affordability rules. Credit approval is required for this conditional invitation."
         script = f"{name}, after credit review, we can share a conditional top-up invitation of up to Rs {amount:,}. The terms require further checks; this demo does not offer a real loan."
     elif code == "HARDSHIP_RESTRUCTURE_CALL":
-        rationale = f"{name}'s job-loss conversation and overdue payment support a helpful officer callback rather than a payment-pressure message."
+        request = "job-loss conversation" if any(i.get("entities", {}).get("hardship_reason") == "job loss" for i in evidence) else "hardship request"
+        rationale = f"{name}'s {request} and overdue payment support a helpful officer callback."
         script = f"{name}, an officer can discuss support options with you. This callback request does not promise a payment break, a rate change, or loan approval."
     else:
         rationale = f"{name} has a recently overdue payment without an identified hardship request. A respectful payment reminder is available."
