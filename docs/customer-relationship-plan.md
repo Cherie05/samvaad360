@@ -2,6 +2,14 @@
 
 Updated **6 October 2026, IST**. This document is the implementation and rollout plan for the Customer hub extension. The public prototype is [Samvaad 360](https://samvaad360.streamlit.app/). Actual onboarding and servicing belong to the private staff API and its operational database. Public anonymous exercises are isolated to the visitor's session.
 
+## Verified release evidence
+
+[GitHub run 37483107870](https://github.com/Cherie05/samvaad360/actions/runs/37483107870) passed **557 tests in 81.51 seconds** for source `7a619e718508777ee491bcf78309b0b2a8f0d7c3`. Deployment job `112337447935` succeeded, confirming 20 customers and `LIVE_VERSION_READY`. Local validation passed **555 tests in 78.18 seconds** in the full suite, followed by a **14-test targeted pass** including two additional engine fact cases. CI covers the complete 557-test suite.
+
+The hosted public browser passed **20 checks** at **2026-10-06T15:00:27.839489Z**, and the local public browser passed **20** at **2026-10-06T14:59:04.862553Z**. Both observed a genuine Snowflake snapshot of 20 fictional customers and six public workspaces, including Customer hub. The private local relationship browser passed **six end-to-end checks** at **2026-10-06T14:51:38.877300Z**. Public checks cover six-workspace onboarding/import/request/opt-out, cross-visit isolation and mobile Customer hub alongside the existing evidence/policy workflows. Private browser checks exercised actual staff/API/customer-form persistence locally.
+
+The shared public snapshot remains the seeded fictional cohort; new public relationships/imports/requests are visit-only. The private local staff/API path persists operational records in SQLite. The private relationship Snowflake schema/writer is not configured or applied, no real telephone call was performed, and production remains **NO-GO**. Community Cloud does not directly expose its deployed source commit. The local staff app and API are running at http://127.0.0.1:8501 and http://127.0.0.1:8000/docs.
+
 ## Where the existing customers come from
 
 The current 20 customers are generated fictional fixtures, loaded into the Snowflake demonstration dataset and published as the four fixed tables in `SAMVAAD_STAGING.PUBLIC_DEMO`. A restricted website reader periodically retrieves a shared snapshot. That is a genuine Snowflake connection, but it is **not an automatic connection to a lender's CRM, loan-management system, email inbox or call-center platform**. Opening a profile does not fetch or modify an external account.

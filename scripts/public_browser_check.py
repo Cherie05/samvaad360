@@ -54,10 +54,19 @@ def main():
 
         def select_customer(name):
             app.get_by_role("tab", name="Customer 360", exact=True).click()
+            expect(app.get_by_role("tab", name="Customer 360", exact=True)).to_have_attribute("aria-selected", "true")
+            app.get_by_text("Omnichannel journey", exact=True).wait_for(timeout=30000)
             app.get_by_role("combobox", name="Customer", exact=True).click()
             app.get_by_role("combobox", name="Customer", exact=True).fill(name)
             app.get_by_role("option", name=re.compile(name)).click()
-            app.get_by_role("heading", name=name, exact=True).wait_for(timeout=30000)
+            try:
+                app.get_by_role("heading", name=name, exact=True).wait_for(timeout=30000)
+            except Exception:
+                screenshot("selection-failure.png")
+                print(json.dumps({"requested_customer": name,
+                    "visible_headings": app.get_by_role("heading").all_text_contents(),
+                    "visible_alerts": app.locator('[data-testid="stAlert"]').all_text_contents()}))
+                raise
             app.get_by_role("button", name="Add to review queue", exact=True).wait_for(timeout=30000)
 
         screenshot("command-center-desktop.png")
@@ -186,12 +195,14 @@ def main():
 
         app.get_by_text("Customer portal", exact=True).click()
         app.get_by_role("combobox", name="Preview as fictional customer", exact=True).click()
-        app.get_by_role("combobox", name="Preview as fictional customer", exact=True).fill("Ananya Rao")
-        app.get_by_role("option", name="Ananya Rao", exact=True).click()
+        app.get_by_role("combobox", name="Preview as fictional customer", exact=True).fill("Ananya")
+        retention_option = app.get_by_role("option", name=re.compile(r"^Ananya\b"))
+        retention_name = retention_option.inner_text().strip()
+        retention_option.click()
         app.get_by_role("button", name="Submit self-service request", exact=True).click()
         expect(app.locator('[data-testid="stMetric"]').filter(has_text="Open requests")).to_contain_text("1", timeout=30000)
         app.get_by_role("button", name="Rehearse withdrawing all contact permission", exact=True).click()
-        select_customer("Ananya Rao")
+        select_customer(retention_name)
         expect(app.get_by_role("button", name="Add to review queue", exact=True)).to_be_disabled()
         app.get_by_text("Calls not permitted", exact=True).wait_for()
         app.get_by_role("tab", name="Call studio", exact=True).click()
@@ -206,8 +217,8 @@ def main():
         for private_name in ("Browser CRM Demo", "Asha Demo"):
             second_app.get_by_role("combobox", name="Customer", exact=True).fill(private_name)
             expect(second_app.get_by_role("option", name=re.compile(private_name))).to_have_count(0)
-        second_app.get_by_role("combobox", name="Customer", exact=True).fill("Ananya Rao")
-        second_app.get_by_role("option", name=re.compile("Ananya Rao")).click()
+        second_app.get_by_role("combobox", name="Customer", exact=True).fill(retention_name)
+        second_app.get_by_role("option", name=re.compile(re.escape(retention_name))).click()
         second_app.get_by_role("tab", name="Customer 360", exact=True).click()
         expect(second_app.get_by_role("button", name="Add to review queue", exact=True)).to_be_enabled()
         report["checks"].append("another visitor sees no added CRM customers and retains unchanged snapshot contact policy")

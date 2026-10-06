@@ -1,8 +1,10 @@
 # Samvaad 360 product and production plan
 
-Updated **6 October 2026, IST**. The prototype is live at [samvaad360.streamlit.app](https://samvaad360.streamlit.app/); its source is [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). At **2026-10-06T10:01:09.172213Z**, **15 hosted-browser checks** passed with a genuine 20-customer Snowflake snapshot. [GitHub run 37446880972](https://github.com/Cherie05/samvaad360/actions/runs/37446880972) passed **400 tests in 71.42 seconds** and private deployment for source `be60c2aaaaaedc3e5bf6384fbb5df54f28f8df18`; local tests passed 400 in 69.38 seconds. The public report observes the new features after that push; hosting does not directly expose its commit. This document separates the shipped prototype from production work. See [build status](../BUILD_STATUS.md).
+Updated **6 October 2026, IST**. The prototype is live at [samvaad360.streamlit.app](https://samvaad360.streamlit.app/); its source is [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). [GitHub run 37483107870](https://github.com/Cherie05/samvaad360/actions/runs/37483107870) passed **557 tests in 81.51 seconds** for source `7a619e718508777ee491bcf78309b0b2a8f0d7c3`. Deployment job `112337447935` succeeded, confirming 20 customers and `LIVE_VERSION_READY`. Local validation passed **555 tests in 78.18 seconds** in the full suite, followed by a **14-test targeted pass** including two additional engine fact cases. CI covers the complete 557-test suite. The hosted public browser passed **20 checks** at **2026-10-06T15:00:27.839489Z**, and the local public browser passed **20** at **2026-10-06T14:59:04.862553Z**. Both observed a genuine Snowflake snapshot of 20 fictional customers and six public workspaces, including Customer hub. The private local relationship browser passed **six end-to-end checks** at **2026-10-06T14:51:38.877300Z**. Hosting does not directly expose its commit. See [build status](../BUILD_STATUS.md).
 
 ## Product focus
+
+The verified relationship extension adds local persistent onboarding/review, customer forms, source identity links, versioned import and service cases, plus a separate private outbox/manual Snowflake sink. The public Customer hub rehearses these features per visit. Its private writer/schema remain unconfigured/unapplied, and no actual CRM/LMS auto-sync is claimed. See [the end-to-end relationship plan](customer-relationship-plan.md).
 
 The implemented extension adds portfolio exposure and intervention charts, a repayment/conversation timeline, explicit retention-rule contributions, governance coverage, a four-context comparison and a downloadable decision evidence packet. Shared hourly Snowflake snapshots now enforce application-query budgets and visitor throttling. A genuine Twilio telephone transport and staff-only existing/additional-number controls are prepared but unconfigured. See [the enterprise implementation and release plan](enterprise-release-plan.md) for current protection scope, carrier activation and remaining production gates.
 
@@ -36,13 +38,15 @@ If Snowflake is unavailable, the public app can use its checked fictional bundle
 
 ## Shipped prototype experience
 
-Five workspaces now expose the workflow:
+Six workspaces now expose the workflow:
 
 1. **Command center:** a prioritised case queue, overdue-exposure/action charts, observed signals, data-quality coverage and usage protection. Portfolio totals describe fictional records; illustrative interest differences are not recovered revenue.
 2. **Customer 360:** repayment/conversation timeline, explicit retention-rule contributions, readable offers/policy checks and four-context comparison using the actual engine. The score is a heuristic priority, not a calibrated churn probability.
 3. **Evidence desk:** scoped questions, source excerpts and downloadable customer decision evidence without contact details. Public answers do not trigger a Cortex request.
 4. **Review queue:** pending/completed simulated reviews with a decision, note and export. Anonymous decisions remain isolated between visits and are distinct from real staff approvals.
 5. **Call studio:** a fictional borrower/lender conversation with permission and account-holder confirmation, typed or suggested replies, optional click-to-play browser speech, opt-out and officer-handoff outcomes. New hardship stops an earlier growth invitation, exposes the added evidence and revised decision, and puts further contact on hold for that visit. A conversation record can be exported.
+
+6. **Customer hub:** visit-only fictional intake/review, source ID links and bounded imports, customer requests/withdrawals and a data-sync explanation. New profiles appear across Customer360/evidence in that visit; shared Snowflake records remain unchanged. The separate private local Relationship hub persists real operational workflow state in SQLite. See [the customer relationship plan](customer-relationship-plan.md).
 
 The redesigned forest/off-white interface uses readable cards, status labels, clear primary actions, empty-state guidance and a mobile layout. The current release passed hosted workflow and mobile checks. Browser voice controls and text fallback were inspected; audible playback, speech quality and assistive-technology coverage still require their own checks.
 
@@ -101,7 +105,7 @@ Derive staff roles from trusted login: agent, manager, credit reviewer, tenant a
 
 | Phase | Deliverable | Required release evidence |
 | --- | --- | --- |
-| 0 — Public prototype refresh | Shipped charts, policy explanations/comparison, scoped evidence export, shared protection and conversation adaptation | **Verified:** 15 hosted-browser checks, genuine Snowflake snapshot, 20 customers and successful 400-test/private-deployment run for `be60c2a`. Real calls, public database writes and audio audibility are unverified/disabled. |
+| 0 — Public prototype refresh | Shipped charts, policy explanations/comparison, scoped evidence export, shared protection and conversation adaptation | **Verified:** 20 hosted-browser checks, genuine seeded Snowflake snapshot, 20 customers/six public workspaces and a successful 557-test private app deployment for `7a619e7`. Local relationship browser: six checks. Real calls, public database writes and audio audibility are unverified/disabled. |
 | 0a — Activate telephone pilot | Configure implemented Twilio adapter, owned caller number, Verify, HTTPS API, staff OIDC and exact permitted recipients | Genuine OTP and answered-call evidence, signed callbacks, opt-out, cancellation and uncertain-send reconciliation. Configuration alone is insufficient; production readiness remains false. |
 | 1 — Operational cloud staging | PostgreSQL repository, FastAPI contracts, versioned approvals/consent and transactional outbox | Concurrent approval/claim tests, stale-consent denial, replay/conflict handling, crash/retry recovery and data reconciliation against the existing synthetic domain behaviour. |
 | 2 — Trusted staff pilot | Login, server-derived roles, tenant/customer scopes, secret management and audit access | Wrong-role and cross-customer/tenant tests fail safely; authenticated exports are scoped; secrets rotate; HTTPS, request limits, backup restoration and deletion are rehearsed. |
@@ -128,6 +132,6 @@ Owning the software does not supply a carrier connection, calling number, recipi
 
 ## Current release boundary
 
-The redesigned website is a fictional lender prototype with genuine restricted Snowflake reads, five working workspaces, a priority queue, evidence/scenario comparisons and visit-local review/conversation simulations. New conversation evidence can stop a growth proposal and show the policy response for that visit. The separate operator demonstration persists demo reviews in Snowflake; the local voice lab persists synthetic conversations in SQLite. These are three different state boundaries.
+The redesigned website is a fictional lender prototype with genuine restricted Snowflake reads, six working workspaces, a priority queue, evidence/scenario comparisons and visit-local review/conversation simulations. New conversation evidence can stop a growth proposal and show the policy response for that visit. The separate operator demonstration persists demo reviews in Snowflake; the local voice lab persists synthetic conversations in SQLite. These are three different state boundaries.
 
 The genuine carrier adapter is implemented but disabled. Production PostgreSQL workers, trusted multi-tenant identities, strong borrower authentication, live carrier acceptance and validated credit/churn models remain pending. Production neural voice assets apply to the optional self-hosted path. Actual CoCo execution, the required recording, organizer-template PDF and final portal submission also remain pending. Keep evidence in [build status](../BUILD_STATUS.md), [public deployment](public-website-deployment.md) and [submission fields](hackathon-submission.md).
