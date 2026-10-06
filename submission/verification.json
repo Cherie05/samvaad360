@@ -479,5 +479,93 @@
     "final_video_no_audio_stream": true,
     "final_video_anonymous_playback": "PASS",
     "runtime_code_changed_for_final_packaging": false
+  },
+  "repository_cleanup": {
+    "checked_at_utc": "2026-10-06T17:31:23.525606+00:00",
+    "removed_files": [
+      "scripts/build_submission_deck.py",
+      "scripts/build_submission_deck.mjs",
+      "submission/Samvaad360_Official_Submission.pdf",
+      "submission/Samvaad360_Official_Submission.pptx"
+    ],
+    "reason": "Unused custom deck builders and superseded official draft copies; published historical downloads retained. Live website-linked custom deck preserved.",
+    "retained_release_asset_count": 8,
+    "release_assets_unchanged": true,
+    "anonymous_public_assets": {
+      "checked_at_utc": "2026-10-06T17:30:47.205594+00:00",
+      "authenticated_requests": false,
+      "release_assets_unchanged": true,
+      "assets": [
+        {
+          "name": "Samvaad360_CoCo_Submission.mp4",
+          "http": 200,
+          "bytes": 9603935,
+          "sha256_matches": true,
+          "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_CoCo_Submission.mp4"
+        },
+        {
+          "name": "Samvaad360_Demo.mp4",
+          "http": 200,
+          "bytes": 8845231,
+          "sha256_matches": true,
+          "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Demo.mp4"
+        },
+        {
+          "name": "Samvaad360_Official_Submission.pdf",
+          "http": 200,
+          "bytes": 3113451,
+          "sha256_matches": true,
+          "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission.pdf"
+        },
+        {
+          "name": "Samvaad360_Official_Submission.pptx",
+          "http": 200,
+          "bytes": 5262020,
+          "sha256_matches": true,
+          "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission.pptx"
+        },
+        {
+          "name": "Samvaad360_Official_Submission_Final.pdf",
+          "http": 200,
+          "bytes": 3113560,
+          "sha256_matches": true,
+          "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission_Final.pdf"
+        },
+        {
+          "name": "Samvaad360_Official_Submission_Final.pptx",
+          "http": 200,
+          "bytes": 5262319,
+          "sha256_matches": true,
+          "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission_Final.pptx"
+        },
+        {
+          "name": "Samvaad360_Prototype_Deck.pdf",
+          "http": 200,
+          "bytes": 625215,
+          "sha256_matches": true,
+          "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Prototype_Deck.pdf"
+        },
+        {
+          "name": "Samvaad360_Prototype_Deck.pptx",
+          "http": 200,
+          "bytes": 368771,
+          "sha256_matches": true,
+          "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Prototype_Deck.pptx"
+        }
+      ],
+      "status": "PASSED"
+    },
+    "protected_files_unchanged": 209,
+    "local_markdown_links_checked": 156,
+    "missing_local_links": 0,
+    "private_artifact_ignore_checks": 13,
+    "configuration_examples_preserved": true,
+    "source_and_history_credential_pattern_findings": 0,
+    "source_and_history_scan_scope": "Pattern-based source/history credential check; not a proof that all possible secrets are absent",
+    "deployment_for_cleanup": "Commit uses [skip ci]; no Snowflake deployment or SQL execution requested.",
+    "operational_code_changed": false,
+    "public_app_code_changed": false,
+    "submitted_fields_changed": false,
+    "final_pdf_pptx_video_changed": false
   }
 }

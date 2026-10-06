@@ -17,12 +17,12 @@ FILES = {
     "Samvaad360_Official_Submission_Final.pdf": "application/pdf",
     "Samvaad360_Official_Submission_Final.pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     "Samvaad360_CoCo_Submission.mp4": "video/mp4",
-    "Samvaad360_Official_Submission.pdf": "application/pdf",
-    "Samvaad360_Official_Submission.pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     "Samvaad360_Prototype_Deck.pdf": "application/pdf",
     "Samvaad360_Prototype_Deck.pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     "Samvaad360_Demo.mp4": "video/mp4",
 }
+# Superseded official drafts remain immutable assets on the existing release;
+# re-publishing the current package never requires their local source copies.
 
 
 def main():
