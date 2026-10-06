@@ -1,60 +1,56 @@
-# Samvaad 360 submission guide
+# Samvaad360 participant submission guide
 
-Updated **6 October 2026, IST**. This guide separates prepared artifacts from an actually completed participant submission. **No successful portal submission is recorded.**
+Prepared for **Glacier Queries**, leader **Arunvpp**, **team size 1**. Registration values were confirmed by the participant. The signed-in portal supplied a deadline of **6 October 2026, 11:59 PM IST**. No submission receipt has been recorded.
 
-## Portal fields
+## 1. Submit the GitHub/Deployed Link module
 
-| Field | Value |
+| Portal field | Paste this value |
 | --- | --- |
-| Challenge | **Customer 360 and Next Best Action Engine** |
+| Challenges | **Customer 360 and Next Best Action Engine** |
 | GitHub Public Repository Link | https://github.com/Cherie05/samvaad360 |
 | Prototype Deployed Link | https://samvaad360.streamlit.app/ |
-| Product walkthrough link | https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Demo.mp4 — **4:12**, actual website; native CoCo segment still required. |
-| Prototype deck upload | [Samvaad360_Prototype_Deck.pdf](../submission/Samvaad360_Prototype_Deck.pdf), **625 KB**, ten pages, visually verified; custom format pending organizer-template validation. |
-| Editable deck source | [Samvaad360_Prototype_Deck.pptx](../submission/Samvaad360_Prototype_Deck.pptx) |
 
-The official challenge asks for structured/unstructured customer touchpoints, including transcripts, and next-best-action recommendations. The implemented lender scope fits that challenge; it does not claim implemented insurance claims processing. [Official challenge and rubric](https://hack2skill.com/event/cococlihack-gccedition/).
+Click **Submit** for this module and keep its confirmation. The repository is public and the website is accessible without the owner's Snowflake login. If the free host is asleep, wake it and check its displayed source label.
 
-The owner-provided participant form lists **6 October 2026, 11:59 PM IST**. The public event page lists **13 September–4 October** for the prototype window. Use the signed-in participant portal's actual deadline; the later deadline is participant-supplied evidence, not an independently verified general extension. [Public timeline](https://hack2skill.com/event/cococlihack-gccedition/).
+## 2. Fill the Prototype/MVP module
 
-## Copy-ready Prototype/MVP brief
+Select **Customer 360 and Next Best Action Engine** again.
 
-Copy only the following paragraph. It is **928 characters**, below the 1024-character field limit:
+### Prototype/MVP Brief
 
-Samvaad 360 is a lender Customer 360 and Next Best Action prototype joining loan/payment facts with emails, chats and call transcripts. Six public workspaces explain portfolio priorities, customer journeys, policy contributions and cited recommendations. Review-gated conversations adapt to hardship and opt-out, stopping stale growth proposals. Customer hub rehearses onboarding, imports and servicing; the private SQLite portal persists intake/review, source links, versioned imports, cases and preference withdrawals. A restricted Snowflake reader serves 20 seeded fictional customers through shared budgeted snapshots; public changes remain visit-only. Verified: 557 CI tests, 20 hosted-browser checks and 6 private local workflow checks. Real calling is disabled, private Snowflake sync is unconfigured, and production identity is pending. A product walkthrough is published; native CoCo workflow recording remains pending.
+Copy only this paragraph (**871 characters**, under 1024):
 
-If actual CoCo execution/video evidence is completed, update the final sentence to the verified result and recount the paragraph before submitting. A Python CLI trace, skill listing or successful Cortex SQL model request alone is not evidence of a CoCo-executed workflow.
+Samvaad360 is a lending Customer 360 and Next Best Action prototype. It joins loan/payment facts with emails, chats and call transcripts, then recommends evidence-backed, reviewable interventions. Consent, hardship and opt-out checks prevent inappropriate outreach; a new job-loss reply stops an earlier growth proposal and routes human help. Six workspaces cover portfolio visualizations, customer journeys, cited answers, review queues, adaptive conversation rehearsal and onboarding/imports/servicing. A restricted Snowflake reader serves 20 fictional customers with shared snapshots and query budgets. Verified: 557 CI tests, 20 hosted-browser checks and 6 private local portal checks. Public changes are visit-only simulations; real calls and financial execution are disabled. The repository includes modular evidence, recommendation and approved-runner CoCo skills.
 
-## Judge quick start
+### Prototype deck upload
 
-1. Open the public prototype in a fresh browser. Wake the free-host app if needed and inspect its source label. The verified release read a real Snowflake snapshot; a displayed offline backup must be described as offline.
-2. Select **Kabir Bose** in Customer 360. Compare **A job loss**: the actual policy changes his reminder to a supportive hardship callback. Inspect the conversation/repayment timeline and evidence IDs.
-3. Select **Imran Shaikh**, add the proposal to Review queue, approve in simulation, open Call studio, grant transcript permission and confirm the fictional account holder. Choose **I lost my job** and show growth stops.
-4. Visit Customer hub: submit/review a fictional application, preview/apply fictional source data, then demonstrate a customer request and opt-out. State that these public exercises belong to the visit.
+Upload **[Samvaad360_Official_Submission.pdf](../submission/Samvaad360_Official_Submission.pdf)**. It is **six pages / 3,113,451 bytes (3.12 MB)**, below the 5 MB limit. It follows the actual participant-provided organizer template. The cover includes Glacier Queries, Arunvpp and team size 1. All six slides and PDF pages were visually checked; template-plan and fidelity checks passed with zero issues. Sources/provenance are in the editable [PowerPoint](../submission/Samvaad360_Official_Submission.pptx) notes. Upload the PDF to the form.
 
-The private local Relationship hub/API has a separate durable workflow: applicant intake → staff attestation/review → source linkage → validated import → Customer 360 → service cases/preferences. Local operators are demonstration identities. The private local browser verified this path; it is not an externally hosted production borrower portal.
+The earlier ten-page custom deck is supplementary material; use the official PDF above for the template upload.
 
-## Evidence to include
+### Demo video link - requirement still pending
 
-| Evidence | Verified scope |
-| --- | --- |
-| [GitHub run 37490270245](https://github.com/Cherie05/samvaad360/actions/runs/37490270245) | **557 tests / 75.62 seconds**, source `7e8cdc63805efde662bbc300dede0f33ce5cff07`; deployment job `112362108238` verified 20 customers and `LIVE_VERSION_READY`. |
-| Hosted public browser | **20 checks** at `2026-10-06T15:47:55.069776Z`; genuine Snowflake source, seeded 20-customer cohort, six workspaces and new relationship exercises. Hosting does not directly expose its commit. |
-| Local public browser | **20 checks** at `2026-10-06T14:59:04.862553Z`. |
-| Private local relationship browser | **6 checks** at `2026-10-06T14:51:38.877300Z`; persistent SQLite staff/API/customer forms. |
-| Local automated validation | Full **555 / 78.18 seconds**, followed by **14 targeted tests** including two new engine fact cases. CI covers the complete 557-test suite. |
+The [published product walkthrough](https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Demo.mp4) is **4:12** and demonstrates the actual public Snowflake-backed website. **It does not yet include the required actual native CoCo CLI workflow.** Treat it as supplementary product footage, not proof that the CLI video requirement is complete.
 
-Technical records are described in [BUILD_STATUS.md](../BUILD_STATUS.md). The product verification above covers runtime source `7a619e7`; documentation release `42fabba` follows it. Submission packaging adds a judge's guide to the sidebar, deck, recorded product walkthrough, docs and a read-only CoCo evidence skill; its later source/checks are recorded in [verification.json](../submission/verification.json).
+The portal requires a **3-5 minute screen recording** showing **CoCo input -> actual tool processing -> actual output**, at least one completed workflow and **2-3 modular skills/capabilities**. Use evidence, generate and approved runner. The [exact private CoCo setup and prompt](coco-demo.md) are ready. Record only after private sign-in. Show citations, the actual action ID and returned COMPLETED/CALLBACK state; keep passwords, tokens and account-login screens out of the recording. Include a short live website segment showing Snowflake and the hardship change. Publish the final video with access available to judges, and test its link in an incognito browser.
 
-## Exact outstanding submission items
+CoCo runs in the separate terminal originally titled **Samvaad 360 - Private CoCo Submission Setup**. Find it with Alt+Tab or the Windows Terminal taskbar tabs. If it has been closed, open PowerShell in this project and run:
 
-| Item | Current state | Completion evidence needed |
-| --- | --- | --- |
-| Public repository and prototype links | Available and verified | Reopen both anonymously before final submission. |
-| Deck | **Complete:** ten-page PDF, 625,215 bytes; ten-slide editable PowerPoint. All pages/slides visually inspected; bounds, notes, credential patterns and link checks passed. | Organizer-template validation remains required. |
-| Organizer submission template | **Not provided in this session** | Download/access the actual template linked in the participant portal; inspect it and adapt the deck. An original deck is not proof of template compliance. |
-| Actual CoCo workflow | **Pending** | Recorded native CoCo input → processing/tool execution → output, with at least one complete working flow and 2–3 modular capabilities. |
-| 3–5 minute product walkthrough | **Recorded:** actual Snowflake-backed website, 251.51 seconds, narrated at 1.4× playback. Public release link above. | This covers the website; add actual native CoCo input/tool processing/output before claiming the required workflow video is complete. |
-| Participant form submission | **Not recorded** | Uploaded PDF, completed required fields, successful confirmation/receipt and its timestamp. A saved draft or prepared artifact does not establish submission. |
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -NoExit -File scripts/start_submission_coco.ps1
+```
 
-The project has no measured real-world ROI/churn improvement, proven market exclusivity or guaranteed contest outcome. Its observable result is an evidence-backed, policy-controlled lender workflow on synthetic data. Real calls/SMS/financial changes were not performed. Production remains **NO-GO**; private Snowflake relationship sync, strong identity, actual lender-source connection and operational cloud rollout remain pending. See [production readiness](production-readiness.md).
+Complete any login privately, then enter the prompt from [coco-demo.md](coco-demo.md). A skill listing, Python-only run or copied prompt does not establish a completed native workflow. The latest read-only check still finds the isolated action APPROVED, with only evidence/ask observations, not a completed callback. Obtain the real output before claiming completion.
+
+## 3. Finish and keep the receipt
+
+Check the correct challenge, both public links, brief, final video accessibility and PDF upload. Click **Submit** for the Prototype/MVP module before the portal deadline. Keep the successful confirmation and timestamp for **both** modules. A saved draft, GitHub release or filled form is not a completed submission.
+
+## Verification and scope
+
+- [GitHub run 37490270245](https://github.com/Cherie05/samvaad360/actions/runs/37490270245): 557 tests passed; deployment verified 20 fictional customers and live files. Source: `7e8cdc63805efde662bbc300dede0f33ce5cff07`.
+- Hosted anonymous browser: 20 checks, genuine Snowflake source, six workspaces, onboarding/import/service and visit isolation at `2026-10-06T15:47:55.069776Z`.
+- Private local relationship portal: six persistent SQLite staff/API/customer workflow checks at `2026-10-06T14:51:38.877300Z`.
+- [Submission verification](../submission/verification.json) records package checks. [BUILD_STATUS.md](../BUILD_STATUS.md) preserves implementation evidence.
+
+All demo customers are fictional. Public changes remain visit-only; private operational persistence is local SQLite. Real calls, SMS and financial execution are disabled. Private Snowflake relationship sync, managed identity/database and carrier acceptance remain production gates. This is a working lending prototype; it does not claim insurance claims implementation, measured business ROI, market exclusivity or production certification. See [production readiness](production-readiness.md).

@@ -14,6 +14,8 @@ from scripts.github_actions import session
 ROOT = Path(__file__).resolve().parents[1]
 TAG = "hackathon-submission-2026"
 FILES = {
+    "Samvaad360_Official_Submission.pdf": "application/pdf",
+    "Samvaad360_Official_Submission.pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     "Samvaad360_Prototype_Deck.pdf": "application/pdf",
     "Samvaad360_Prototype_Deck.pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     "Samvaad360_Demo.mp4": "video/mp4",
@@ -71,7 +73,7 @@ def main():
         asset["url"] = response.json()["browser_download_url"]
         print("PUBLIC_ASSET_UPLOADED: " + asset["name"], flush=True)
     report = {"status": "PUBLISHED", "release": release["html_url"], "assets": assets,
-              "portal_submitted": False, "organizer_template_verified": False,
+              "portal_submitted": False, "organizer_template_verified": True,
               "coco_video_requirement_verified": False}
     path = ROOT / "output/submission-release.json"
     path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

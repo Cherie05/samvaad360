@@ -1,5 +1,5 @@
 # Private interactive CoCo onboarding. Only an isolated fictional database is initialized.
-param([switch]$PrepareOnly)
+param([switch]$PrepareOnly, [switch]$SubmissionWorkflow)
 $ErrorActionPreference = 'Stop'
 $host.UI.RawUI.WindowTitle = 'Samvaad 360 - Private CoCo Submission Setup'
 $submissionWorkspace = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -32,7 +32,17 @@ Write-Host 'Samvaad 360 - Private CoCo Submission Setup'
 Write-Host 'Choose the existing samvaad_hackathon connection in the CoCo wizard.'
 Write-Host 'Account: ZYLTUKM-HU63768. User: ARUNVPP24. Enter any password and MFA privately here.'
 Write-Host 'Do not paste credentials into chat and do not enable password saving merely for automation.'
-Write-Host 'When the CoCo conversation opens, run /skill list. Stop there and leave this terminal open.'
+if ($SubmissionWorkflow) {
+    $submissionPromptPath = Join-Path $submissionRoot 'workflow-prompt.txt'
+    if (-not (Test-Path -LiteralPath $submissionPromptPath)) { throw 'The prepared fictional workflow prompt is missing.' }
+    Set-Clipboard -Value (Get-Content -LiteralPath $submissionPromptPath -Raw)
+    Write-Host 'The fictional three-skill demo prompt is on your clipboard.'
+    Write-Host 'After the CoCo conversation opens, press Ctrl+V, then Enter.'
+    Write-Host 'Allow only the requested local tools.cli commands. Wait for actual tool output.'
+    Write-Host 'Record only after login; keep passwords, tokens and login screens out of video.'
+} else {
+    Write-Host 'When the CoCo conversation opens, run /skill list. Stop there and leave this terminal open.'
+}
 Write-Host 'The local application database for this terminal contains only isolated fictional fixtures.'
 Write-Host ''
 & $submissionCortex --no-auto-update --no-mcp --sql-read-only --private --connection samvaad_hackathon --shell powershell --max-turns 12

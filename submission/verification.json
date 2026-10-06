@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-10-06T15:52:00.279801+00:00",
+  "updated_at_utc": "2026-10-06T16:16:02.986904+00:00",
   "scope": "Submission packaging; distinguish preparation from organizer compliance and actual submission",
   "public_repository": "https://github.com/Cherie05/samvaad360",
   "public_website": "https://samvaad360.streamlit.app/",
@@ -8,7 +8,7 @@
   "real_calls_verified": false,
   "lender_continuous_sync_activated": false,
   "portal_submitted": false,
-  "organizer_template_verified": false,
+  "organizer_template_verified": true,
   "coco_workflow_and_recording_verified": false,
   "verified_product_release": {
     "source_commit": "7a619e718508777ee491bcf78309b0b2a8f0d7c3",
@@ -23,11 +23,19 @@
     "scope": "CoCo guard contracts, public app and visit reader"
   },
   "deck": {
-    "pages": 10,
-    "pdf_bytes": 625215,
-    "slides_visually_reviewed": 10,
-    "pdf_pages_visually_reviewed": 10,
-    "template": "Custom; organizer template not supplied"
+    "pdf": "Samvaad360_Official_Submission.pdf",
+    "pptx": "Samvaad360_Official_Submission.pptx",
+    "pages": 6,
+    "pdf_bytes": 3113451,
+    "slides_visually_reviewed": 6,
+    "pdf_pages_visually_reviewed": 6,
+    "template": "Actual organizer PPTX supplied by participant",
+    "template_plan": "pass",
+    "template_fidelity": "pass",
+    "zero_fidelity_issues": true,
+    "sources_blocks": 6,
+    "pdf_clickable_links_verified": true,
+    "team_cover_confirmed": true
   },
   "product_walkthrough": {
     "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Demo.mp4",
@@ -52,6 +60,16 @@
       "name": "Samvaad360_Demo.mp4",
       "bytes": 8845231,
       "sha256": "e85852641a0a85d89d65f6b56c703aec5a876a8f2fb0bed5e7022bc77ebd050c"
+    },
+    {
+      "name": "Samvaad360_Official_Submission.pdf",
+      "bytes": 3113451,
+      "sha256": "28f1d3949db41095dd9df20fa15b5a6ab81e24edd80c93c202c5ca9594fe92dd"
+    },
+    {
+      "name": "Samvaad360_Official_Submission.pptx",
+      "bytes": 5262020,
+      "sha256": "c4993450a0d2916ce9ace9e51dd9833d598ef1a6a65c31dbf4fecd447447719f"
     }
   ],
   "submission_source_commit": "7e8cdc63805efde662bbc300dede0f33ce5cff07",
@@ -120,5 +138,40 @@
     ],
     "full_workflow_verified": false,
     "model_smoke": "Exit 1 with no assistant response in separate process; native completion remains unverified"
+  },
+  "registration": {
+    "team": "Glacier Queries",
+    "leader": "Arunvpp",
+    "size": 1,
+    "participant_confirmed": true
+  },
+  "prior_custom_deck": {
+    "pages": 10,
+    "pdf_bytes": 625215,
+    "slides_visually_reviewed": 10,
+    "pdf_pages_visually_reviewed": 10,
+    "template": "Custom; organizer template not supplied"
+  },
+  "portal_brief_characters": 871,
+  "official_public_assets": {
+    "checked_at_utc": "2026-10-06T16:17:10.876939+00:00",
+    "authenticated_requests": false,
+    "assets": [
+      {
+        "name": "Samvaad360_Official_Submission.pdf",
+        "http": 200,
+        "bytes": 3113451,
+        "sha256_matches": true,
+        "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission.pdf"
+      },
+      {
+        "name": "Samvaad360_Official_Submission.pptx",
+        "http": 200,
+        "bytes": 5262020,
+        "sha256_matches": true,
+        "url": "https://github.com/Cherie05/samvaad360/releases/download/hackathon-submission-2026/Samvaad360_Official_Submission.pptx"
+      }
+    ],
+    "status": "PASSED"
   }
 }

@@ -1,28 +1,35 @@
-SAMVAAD360 PROTOTYPE DECK — PROVISIONAL CUSTOM TEMPLATE
+SAMVAAD360 OFFICIAL ORGANIZER TEMPLATE ADAPTATION
 
-Organizer submission template was not supplied at generation. This is a custom
-10-slide presentation and PDF using the product's forest/cream visual design.
-Do not describe this as the official organizer template.
+Source: participant-provided Prototype Submission Template _ CoCo CLI Hackathon
+GCC Edition.pptx. All six source slides inspected before duplication.
 
-Suggested mapping when the official template is available:
-1. Solution name / challenge: slide 1
-2. Problem statement: slide 2
-3. Prototype / product brief: slide 3
-4. Architecture and stack: slide 4
-5. Modular capabilities and CoCo evidence / generate / approved runner skills: slide 5
-6. End-to-end working workflow: slide 6
-7. Customer onboarding and source synchronization: slide 7
-8. Governance and enterprise controls: slide 8
-9. Validation, deployment scope and remaining production gates: slide 9
-10. Public prototype and GitHub links: slide 10
+Final upload: Samvaad360_Official_Submission.pdf (6 pages, 3,113,451 bytes).
+Editable source: Samvaad360_Official_Submission.pptx.
+Registration: Glacier Queries / Arunvpp / team size 1 (participant confirmed).
 
-Evidence scope:
-557 automated tests passed in GitHub CI.
-20 anonymous hosted browser checks passed with Snowflake verified.
-6 private staff/borrower browser checks passed.
-All customer records and public review/conversation outcomes are fictional.
-Public changes remain isolated to one visit; persistent operational CRM is local.
-Private Snowflake writer activation and real-carrier call proof remain pending.
-CoCo skill definitions exist; authenticated end-to-end skill execution proof must
-be verified separately. Do not imply that a browser-only video meets the CoCo
-CLI requirement without an actual execution recording.
+Final page -> original slide -> edited element:
+1. Cover -> 1 -> four existing team/leader/size/problem text fields.
+2. Problem Brief -> 2 -> existing large guidelines text frame.
+3. Architecture Diagram -> 2 -> duplicated existing editable text frame.
+4. Impact Statement -> 2 -> duplicated existing editable text frame.
+5. Demonstration and public links -> 2 -> duplicated editable text frame.
+6. Thank You -> 6 -> original closing artwork preserved.
+
+Original branded slides 3 and 4 have no editable body slots. Original slide 5
+has only a small Additional Slide footer. Source slide 2 was duplicated for
+body pages to retain actual editable template elements. Logos, backgrounds,
+masters/layouts, Manrope typography, geometry, insets and leading retained.
+No fresh slides, overlays or package XML edits.
+
+All six rendered slides and PDF pages individually inspected. Plan validation
+and template fidelity checks passed with zero issues. PDF is under 5 MB;
+both public URLs are clickable. Every slide has a sources/provenance note.
+The original custom ten-slide PDF/PPTX remains supplementary material.
+
+Evidence: 557 CI tests, 20 hosted checks, 6 private local portal checks.
+All records are fictional. Public changes belong to the visit. The private
+operational CRM persists locally. Private Snowflake synchronization activation,
+enterprise identity and real telephone calling are still pending.
+CoCo skills are defined and discovered. Actual native CoCo workflow execution
+and its 3-5 minute screen recording remain unverified. A browser-only video
+does not satisfy the stated CoCo CLI video requirement. Portal receipt pending.
