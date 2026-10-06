@@ -1,5 +1,6 @@
 """Samvaad 360: an evidence-led public lending command center."""
 import logging
+import json
 import os
 import sys
 import tomllib
@@ -10,9 +11,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import streamlit as st
 
 from public_app.calling import CallSandbox
+from public_app.analytics import customer_analytics, intervention_matrix, portfolio_analytics
 from public_app.insights import explain_action, priority_queue, simulate_interaction, summarize_portfolio
-from public_app.repository import DemoError, ReviewSandbox, SnapshotReader, connect_reader
+from public_app.repository import DemoError, GuardedSnapshotReader, ReviewSandbox, SnapshotReader, connect_reader
+from public_app.security import PublicGuard
 from public_app.ui.call_audio import render_browser_voice
+from public_app.ui.charts import render_driver_chart, render_governance, render_intervention_matrix, render_portfolio_charts, render_relationship_timeline
+from public_app.ui.telephone import render_telephone
 from public_app.ui.visuals import CSS, chip, date_label, empty_state, evidence_card, fields, metric_grid, money, safe, section
 
 st.set_page_config(page_title="Samvaad 360 | Lending command center", page_icon="◉", layout="wide")
@@ -20,21 +25,31 @@ st.markdown(CSS, unsafe_allow_html=True)
 st.markdown('<h1 class="sr-only">Samvaad 360 customer intelligence workspace</h1>', unsafe_allow_html=True)
 
 
-@st.cache_resource(ttl=300, show_spinner=False)
+@st.cache_resource(show_spinner=False)
+def usage_guard():
+    return PublicGuard()
+
+
+def visitor_identity():
+    return usage_guard().visitor(context_ip=st.context.ip_address, headers=st.context.headers,
+                                 edge_secret=os.getenv("SAMVAAD_TRUSTED_EDGE_SECRET"))
+
+
+@st.cache_resource(show_spinner=False)
 def reader():
-    connected = None
+    settings = None
     try:
         local_secrets = os.getenv("SAMVAAD_PUBLIC_SECRETS_FILE")
         settings = (tomllib.loads(Path(local_secrets).read_text(encoding="utf-8"))["snowflake"]
                     if local_secrets else dict(st.secrets["snowflake"]))
-        connected = connect_reader(settings)
-        connected.customers()
-        return connected
     except Exception as error:
-        if connected is not None:
-            connected.session.connection.close()
         logging.getLogger("samvaad.public").warning("Public fallback activated: %s", type(error).__name__)
-        return SnapshotReader(Path(__file__).with_name("synthetic_snapshot.json"))
+    def load(permit):
+        if settings is None:
+            raise DemoError("Live data settings are unavailable.")
+        return connect_reader(settings, budget=permit)
+    return GuardedSnapshotReader(load, SnapshotReader(Path(__file__).with_name("synthetic_snapshot.json")),
+                                 usage_guard(), refresh_seconds=3600)
 
 
 @st.cache_data(ttl=300, max_entries=2, show_spinner=False)
@@ -72,6 +87,10 @@ def run_visit_action(tab, action):
     """Apply a visit action before Streamlit chooses which tab to render."""
     st.session_state["workspace_tabs"] = tab
     try:
+        admission = usage_guard().admit(visitor_identity(), kind="action")
+        if not admission.allowed:
+            st.session_state["public_flash_error"] = f"Too many actions. Try again in {admission.retry_after} seconds."
+            return
         action()
     except DemoError as error:
         st.session_state["public_flash_error"] = str(error)
@@ -148,6 +167,30 @@ def visit_hold(customer_id):
 def visit_update(customer_id):
     return next((record for record in reversed(st.session_state.get("public_calls", {}).get("sessions", []))
                  if record["customer_id"] == customer_id and record.get("decision_after")), None)
+
+
+def admit_telephone_action():
+    admission = usage_guard().admit(visitor_identity(), kind="action")
+    if not admission.allowed:
+        st.warning(f"Too many telephone operations. Try again in {admission.retry_after} seconds.")
+    return admission.allowed
+
+
+def render_usage_protection():
+    status = reader().source_status()
+    html(section("Usage protection", "Shared limits keep visitor activity away from warehouse queries"))
+    html(metric_grid([
+        ("Visitor database queries", 0, "Customer views, evidence and reviews use the shared snapshot"),
+        ("Refresh statements today", f'{status.get("application_statements_day", 0)}/{status.get("daily_statement_limit", 64)}', "Application statement reservations · not billed credits"),
+        ("Automatic refresh", "Hourly", "Single refresh for all visitors · no public refresh control"),
+        ("Requests held", status.get("requests_blocked", 0), "Shared host throttle and circuit breaker"),
+    ]))
+    if status.get("last_refresh"):
+        st.caption("Last successful Snowflake snapshot: " + status["last_refresh"])
+    if status.get("stale"):
+        st.warning("Live refresh is held. These are dated facts from the last successful Snowflake snapshot.")
+    st.caption("Current hosting uses a shared visitor limit. Verified IP limits require a trusted gateway. "
+               "Host limits do not meter all account credits or survive every hosting replacement; the Snowflake warehouse monitor remains a separate safeguard.")
 
 
 def render_offer(view):
@@ -244,6 +287,16 @@ def render_command_center(source):
             html(fields([{"label": "Awaiting your review", "value": pending}, {"label": "Ready to rehearse", "value": approved}]))
             st.button("Open review queue →", width="stretch", on_click=open_workspace,
                       args=(st.session_state["selected_customer"], "Review queue"))
+    html(section("Portfolio intelligence", "Observed exposure and intervention priorities"))
+    analytics = portfolio_analytics(views)
+    render_portfolio_charts(analytics)
+    with st.expander("Data quality and policy coverage"):
+        render_governance(analytics)
+        alerts = analytics.get("alerts", [])
+        if alerts:
+            st.dataframe(alerts, hide_index=True, width="stretch")
+    with st.expander("Database usage protection"):
+        render_usage_protection()
     html(section("Explore four customer stories", "A guided tour of the decision engine"))
     stories = [("C0001", "Ravi", "A job loss changes the conversation", "Hardship evidence prioritises support over payment pressure.", "amber"),
                ("C0002", "Ananya", "A loyal borrower may leave", "A competitor offer prompts a capped, reviewable retention proposal.", "green"),
@@ -257,6 +310,7 @@ def render_command_center(source):
 
 def render_customer(view):
     customer, metrics = view["customer"], view["metrics"]
+    analytics = customer_analytics(view)
     initials = ''.join(word[0] for word in customer["full_name"].split()[:2])
     html(f'<div class="identity"><div class="avatar">{safe(initials)}</div><div><div class="eyebrow">Customer workspace</div>'
          f'<h2>{safe(customer["full_name"])}</h2><div class="meta">{safe(customer["customer_id"])} · {safe(customer["city"])}'
@@ -278,6 +332,8 @@ def render_customer(view):
         with st.container(border=True):
             render_action(view, show_button=True)
             st.caption("Review and call actions in this public experience are fictional simulations.")
+        html(section("Repayment and conversation timeline", "Connect recorded numbers with customer context"))
+        render_relationship_timeline(analytics, key_prefix=customer["customer_id"])
         html(section("Omnichannel journey", f'{len(view["interactions"])} recorded interactions'))
         if not view["interactions"]:
             html(empty_state("No interactions recorded", "The recommendation relies on available lending facts."))
@@ -298,6 +354,8 @@ def render_customer(view):
             late = sum(p["status"] in {"LATE", "BOUNCED"} for p in view["payments"])
             st.caption(f"{len(view['payments'])} repayment records · {paid} paid on time · {late} late or bounced")
     with right:
+        html(section("Retention priority drivers", "See the contribution of each rule"))
+        render_driver_chart(analytics, key_prefix=customer["customer_id"])
         html(section("Why this action", "Policy checkpoints"))
         with st.container(border=True):
             render_checks(view)
@@ -327,6 +385,8 @@ def render_customer(view):
                 st.caption("Fictional scenario overlay. Saved customer data and the live recommendation remain unchanged.")
             else:
                 st.caption("Runs the same policy rules against fictional context. No loan terms or contact preferences are saved.")
+    with st.expander("Compare all four customer-context changes"):
+        render_intervention_matrix(intervention_matrix(view), key_prefix=customer["customer_id"])
 
 
 def render_evidence(view, repository):
@@ -364,6 +424,15 @@ def render_evidence(view, repository):
         with st.expander("All recorded conversations"):
             for interaction in view["interactions"]:
                 html(evidence_card(interaction))
+    with st.expander("Policy trace and evidence export"):
+        st.dataframe(customer_analytics(view)["policy_trace"], hide_index=True, width="stretch")
+        from public_app.repository import decision_hash
+        packet = {"customer_id": customer["customer_id"], "as_of": view["metrics"]["evaluation_time"],
+                  "decision_fingerprint": decision_hash(view["decision"]), "decision": view["decision"],
+                  "policy_checks": explain_action(view)["checks"], "evidence": explain_action(view)["evidence"],
+                  "scope": "Fictional customer evidence; review required; no financial execution", "contacts_excluded": True}
+        st.download_button("Download decision evidence", json.dumps(packet, indent=2, ensure_ascii=False),
+                           f'samvaad360-{customer["customer_id"]}-evidence.json', "application/json")
 
 
 def render_reviews(repository, sandbox, portfolio):
@@ -410,7 +479,10 @@ def render_reviews(repository, sandbox, portfolio):
 
 def render_call(view, call_sandbox):
     customer, decision = view["customer"], view["decision"]
-    html(section("Call studio", f'Conversation rehearsal with {customer["full_name"]}'))
+    html(section("Call studio", f'Conversation workspace for {customer["full_name"]}'))
+    with st.expander("Telephone calling · existing or additional number", expanded=call_sandbox.current(customer["customer_id"]) is None):
+        render_telephone(view, admit_telephone_action)
+    st.subheader("Conversation lab")
     st.caption("Interactive voice & transcript simulation. No phone call is placed and no message is sent.")
     left, right = st.columns([1.55, 1], gap="large")
     current = call_sandbox.current(customer["customer_id"])
@@ -510,6 +582,10 @@ def render_call(view, call_sandbox):
 
 
 try:
+    admission = usage_guard().admit(visitor_identity(), kind="browse")
+    if not admission.allowed:
+        st.warning(f"This workspace is receiving too many requests. Try again in {admission.retry_after} seconds.")
+        st.stop()
     repository = reader()
     source = "snowflake" if repository.is_live else "snapshot"
     portfolio = customers(source)
@@ -530,7 +606,10 @@ with st.sidebar:
     else:
         st.warning("Data source: offline synthetic snapshot")
         st.caption("Snapshot reference: " + repository.reference)
-    html(f'<div class="sidebar-note">{len(portfolio)} fictional customers<br>Records refresh every 5 minutes</div>')
+    html(f'<div class="sidebar-note">{len(portfolio)} fictional customers<br>Shared hourly snapshot · usage protected</div>')
+    status = repository.source_status() if hasattr(repository, "source_status") else {}
+    if status.get("stale"):
+        st.caption("Last successful Snowflake snapshot. Refresh is paused; saved facts remain browsable.")
     st.divider()
     html('<div class="sidebar-label">Explore a story</div>')
     for cid, label in [("C0001", "Ravi · support"), ("C0002", "Ananya · retention"),
@@ -540,7 +619,7 @@ with st.sidebar:
     html('<div class="sidebar-note"><strong>Public demo</strong><br>Fictional lending records. Reviews and voice conversations are simulations for this visit.</div>')
 
 html('<div class="topline"><span>WORKSPACE / CUSTOMER RELATIONSHIPS</span>'
-     f'<span class="live-pill"><span class="live-dot"></span>{"Snowflake connected" if repository.is_live else "Snapshot demonstration"}</span></div>')
+     f'<span class="live-pill"><span class="live-dot"></span>{"Protected Snowflake snapshot" if repository.is_live else "Snapshot demonstration"}</span></div>')
 if not repository.is_live:
     st.warning("The live Snowflake connection is unavailable. You are exploring a bundled fictional snapshot. "
                "The site is not claiming a live Snowflake or Cortex request in this mode.")

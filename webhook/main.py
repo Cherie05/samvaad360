@@ -2,7 +2,7 @@
 
 Writes authenticate to configured tokens mapped to fixed service identities.
 Offer links are deliberately scoped capabilities for synthetic, expiring offers.
-No network delivery provider is called by this application.
+Telephone transport is a separate, disabled-by-default controlled pilot.
 """
 
 from __future__ import annotations
@@ -72,7 +72,7 @@ def load_token_map() -> dict[str, str]:
         raise RuntimeError("API token configuration is invalid; configure token-to-user JSON.") from exc
     if not isinstance(mapping, dict):
         raise RuntimeError("API token configuration must map token strings to fixed user IDs.")
-    if any(not isinstance(token, str) or len(token) < 24 or not isinstance(user, str) or user not in ALLOWED_USERS for token, user in mapping.items()):
+    if any(not isinstance(token, str) or not token.isascii() or not 24 <= len(token) <= 512 or not isinstance(user, str) or user not in ALLOWED_USERS for token, user in mapping.items()):
         raise RuntimeError("API tokens must have at least 24 characters and map to known local identities.")
     return mapping
 
@@ -127,7 +127,7 @@ def _offer_page(offer: dict, token: str, *, message: str = "") -> str:
     </main></body></html>"""
 
 
-def create_app(service=None, token_map: dict[str, str] | None = None) -> FastAPI:
+def create_app(service=None, token_map: dict[str, str] | None = None, telephony=None) -> FastAPI:
     service = service or create_service()
     tokens = load_token_map() if token_map is None else token_map
     app = FastAPI(title="Samvaad 360 Local API", version="0.1.0")
@@ -161,11 +161,11 @@ def create_app(service=None, token_map: dict[str, str] | None = None) -> FastAPI
         return JSONResponse(status_code=500, content={"error": "INTERNAL_ERROR", "message": "The local request failed. See the local server log."})
 
     def actor(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)):
-        if not credentials or credentials.scheme.lower() != "bearer":
+        if not credentials or credentials.scheme.lower() != "bearer" or not credentials.credentials.isascii() or len(credentials.credentials) > 512:
             raise HTTPException(401, "A configured bearer token is required.", headers={"WWW-Authenticate": "Bearer"})
         identity = None
         for candidate, user in tokens.items():
-            if hmac.compare_digest(candidate, credentials.credentials):
+            if isinstance(candidate, str) and candidate.isascii() and hmac.compare_digest(candidate, credentials.credentials):
                 identity = user
                 break
         if identity not in ALLOWED_USERS:
@@ -174,10 +174,18 @@ def create_app(service=None, token_map: dict[str, str] | None = None) -> FastAPI
 
     from webhook.voice_routes import build_voice_router
     app.include_router(build_voice_router(service, actor))
+    from samvaad.telephony import TelephonyService
+    from webhook.telephony_routes import build_telephony_router
+    telephone = telephony or TelephonyService(service)
+    app.state.telephony = telephone
+    app.include_router(build_telephony_router(service, actor, telephone))
 
     @app.get("/health")
     def health():
-        return {"status": "ok", "mode": "local-synthetic", "external_delivery": False, "telephony": "disabled", "operator_auth_configured": bool(tokens)}
+        enabled = telephone.status()["pilot_ready"]
+        return {"status": "ok", "mode": "controlled-telephone-pilot" if enabled else "local-synthetic",
+                "external_delivery": enabled, "telephony": "carrier-configured" if enabled else "disabled",
+                "operator_auth_configured": bool(tokens), "production_ready": False}
 
     @app.get("/api/me")
     def whoami(current=Depends(actor)):

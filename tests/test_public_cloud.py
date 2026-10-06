@@ -8,6 +8,7 @@ from streamlit.testing.v1 import AppTest
 
 from cloud.config import CloudError, WORKSPACE
 from public_app import repository as public
+from public_app import security as public_security
 from scripts import setup_public_cloud as setup
 from samvaad.signals import extract_signals
 from test_trial_cloud import Session
@@ -219,11 +220,15 @@ def test_public_setup_creates_four_snapshots_without_replacing_staff_tables():
 
 
 @pytest.fixture
-def public_ui(reader, monkeypatch):
+def public_ui(reader, monkeypatch, tmp_path):
     st.cache_data.clear()
     st.cache_resource.clear()
     monkeypatch.setattr(st, "secrets", {"snowflake": {}})
-    monkeypatch.setattr(public, "connect_reader", lambda *_: reader)
+    # Streamlit cache reset must never reset production spend counters. Give
+    # each UI test an isolated host store rather than using the runtime budget.
+    guard_type = public_security.PublicGuard
+    monkeypatch.setattr(public_security, "PublicGuard", lambda: guard_type(tmp_path / "public-guard.db"))
+    monkeypatch.setattr(public, "connect_reader", lambda *_a, **_k: reader)
     yield AppTest.from_file(str(WORKSPACE / "public_app/streamlit_app.py"), default_timeout=10), reader
     st.cache_data.clear()
     st.cache_resource.clear()
@@ -248,7 +253,7 @@ def test_public_ui_hides_provider_messages_and_private_credentials(public_ui, mo
     app.run()
     app.session_state["workspace_tabs"] = "Evidence desk"
     app.run()
-    monkeypatch.setattr(reader, "answer", lambda *_: (_ for _ in ()).throw(RuntimeError("PRIVATE_PROVIDER_CREDENTIAL")))
+    monkeypatch.setattr(public.GuardedSnapshotReader, "answer", lambda *_a, **_k: (_ for _ in ()).throw(RuntimeError("PRIVATE_PROVIDER_CREDENTIAL")))
     next(b for b in app.button if b.label == "Find the evidence").click().run()
     assert not app.exception and app.error
     assert "PRIVATE_PROVIDER_CREDENTIAL" not in caplog.text + " ".join(e.value for e in app.error)

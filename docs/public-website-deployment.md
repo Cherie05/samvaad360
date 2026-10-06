@@ -14,10 +14,13 @@ The public lender prototype uses Streamlit Community Cloud for its browser UI an
 | Public review workflow | Per-visit simulation, without database writes or staff identity |
 | Decision workbench | Portfolio priorities, readable policy checks, omnichannel evidence and what-if changes using the actual lending rules |
 | Call studio | Review-gated browser conversation, click-to-play voice controls, typed replies, evidence-driven policy changes and downloadable transcript; no carrier dialing |
+| Telephone controls | Separate staff-authenticated Twilio API bridge; disabled until provider, HTTPS API and authorised destinations are configured; public reviews cannot authorise calls |
+| Visualisations | Overdue exposure, intervention mix, repayment/conversation timeline, explicit rule contributions and observed signal coverage |
+| Visitor spend protection | Shared hourly snapshots and host-persistent query reservations; 8 application statements/hour and 64/day; no public refresh or arbitrary SQL |
 | Evidence answers | Deterministic summaries with transcript citations; no public Cortex calls |
 | Backup when the trial is unavailable | Checked fictional JSON bundle, prominently labelled offline; never described as a live Snowflake response |
 
-The public adapter admits seven fixed, bounded read queries: four customer-scoped patterns and three portfolio batches. Building the portfolio uses four reads total, avoiding a separate query chain for every customer. It cannot read the private review queue, update financial terms or invoke AI. The public snapshots isolate this demo from future changes to the private RAW dataset. Do not replace them with customer data. Read caching lasts five minutes; the existing X-Small warehouse auto-suspends after 60 seconds and has a five-credit daily warehouse monitor. That monitor is not an account-wide spending guarantee.
+The raw public adapter admits seven fixed, bounded read queries. The hosted `GuardedSnapshotReader` reserves five application statements before an hourly refresh: one identity check and four portfolio reads. It closes the connection and serves all customer/evidence/review workflows from independent memory copies. The host budget permits at most 12 full refresh attempts per UTC day; failed attempts remain charged. Stale Snowflake snapshots are dated and a bundled fallback is clearly labelled. The counter does not measure connector-internal traffic or billed credits, and host replacement can reset its storage. The existing X-Small warehouse auto-suspends after 60 seconds and has a separate five-credit daily warehouse monitor. That monitor is not an account-wide spending guarantee. See [protection and managed-IP setup](enterprise-release-plan.md).
 
 ## Deploy from the signed-in Create app screen
 

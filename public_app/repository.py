@@ -8,7 +8,10 @@ from __future__ import annotations
 
 import copy
 import json
+import logging
+import math
 import threading
+import time
 import uuid
 from datetime import datetime, timezone
 
@@ -57,9 +60,10 @@ class _Row(dict):
 class ReadSession:
     """The small Snowpark-shaped read interface used by the domain adapter."""
 
-    def __init__(self, connection):
+    def __init__(self, connection, *, budget=None):
         self.connection = connection
         self.lock = threading.RLock()
+        self.budget = budget
 
     def sql(self, query, params=None):
         params = params or []
@@ -74,6 +78,8 @@ class ReadSession:
         class Query:
             def collect(self):
                 with session.lock, session.connection.cursor() as cursor:
+                    if session.budget is not None:
+                        session.budget.before_execute()
                     cursor.execute(query, params)
                     columns = [item[0].upper() for item in cursor.description]
                     return [_Row(zip(columns, values)) for values in cursor.fetchall()]
@@ -199,7 +205,7 @@ class SnapshotReader(PublicReader):
         return result
 
 
-def connect_reader(values, *, connector=None):
+def connect_reader(values, *, connector=None, budget=None):
     """Verify the account, service principal and reader role before data reads."""
     expected = {"account": ACCOUNT, "user": SERVICE_USER, "role": READER_ROLE,
                 "warehouse": WAREHOUSE, "database": DATABASE}
@@ -226,16 +232,145 @@ def connect_reader(values, *, connector=None):
     )
     try:
         with connection.cursor() as cursor:
+            if budget is not None:
+                budget.before_execute()
             cursor.execute(IDENTITY_SQL)
             names = [field[0].upper() for field in cursor.description]
             identity = dict(zip(names, cursor.fetchone()))
         target = {"ACCOUNT": ACCOUNT, "LOGIN": SERVICE_USER, "ROLE": READER_ROLE, "WAREHOUSE": WAREHOUSE}
         if any(str(identity.get(k, "")).upper() != v for k, v in target.items()):
             raise DemoError("The connected identity is not the dedicated public website reader.")
-        return PublicReader(ReadSession(connection))
+        return PublicReader(ReadSession(connection, budget=budget))
     except Exception:
         connection.close()
         raise
+
+
+class GuardedSnapshotReader(PublicReader):
+    """A shared, single-flight Snowflake snapshot with memory-only visitor reads.
+
+    ``loader(permit)`` returns ``connect_reader(settings, budget=permit)``. Each
+    refresh reserves all five application statements before connecting: one
+    identity SELECT plus the four bounded portfolio SELECTs. Connector-internal
+    protocol statements and Snowflake credits are not measured by this counter.
+    No visitor-facing API accepts a cache key, SQL, refresh flag or TTL override.
+    Last-known Snowflake data remains explicitly dated when a refresh is blocked;
+    a validated fictional bundle is used if no live snapshot has been loaded.
+    """
+
+    def __init__(self, loader, fallback, guard, *, refresh_seconds=3600, clock=time.time):
+        if (not isinstance(refresh_seconds, (int, float)) or not math.isfinite(refresh_seconds)
+                or refresh_seconds < 3600):
+            raise ValueError("Public snapshots refresh at most once per hour.")
+        super().__init__(None)
+        self.loader, self.fallback, self.guard = loader, fallback, guard
+        self.refresh_seconds, self.clock = refresh_seconds, clock
+        self.reference = fallback.reference
+        self._lock = threading.RLock()
+        self._profiles = None
+        self._loaded_at = None
+        self._next_attempt = 0.0
+        self._from_snowflake = False
+        self._refresh_reason = "not-loaded"
+
+    def _ensure_snapshot(self):
+        # The lock also prevents a second visitor or thread from initiating a
+        # duplicate refresh when every client encounters an expired snapshot.
+        with self._lock:
+            now = self.clock()
+            if self._profiles is not None and now < self._next_attempt:
+                return
+            self._next_attempt = now + self.refresh_seconds
+            backend = None
+            try:
+                permit = self.guard.reserve_queries(5)
+                backend = self.loader(permit)
+                profiles = backend.portfolio_profiles()
+                if not 1 <= len(profiles) <= 100:
+                    raise DemoError("The public snapshot is outside its approved customer bounds.")
+                # Store independent documents; visitors receive another deep
+                # copy, so simulations cannot modify another user's portfolio.
+                loaded = copy.deepcopy(profiles)
+                self.guard.refresh_succeeded()
+                self._profiles, self._loaded_at = loaded, now
+                self._from_snowflake = True
+                self._refresh_reason = "fresh-cached-snapshot"
+            except Exception as error:
+                from public_app.security import BudgetExceeded, GuardUnavailable
+                self._refresh_reason = (str(error) if isinstance(error, BudgetExceeded)
+                                        else "protection-unavailable" if isinstance(error, GuardUnavailable)
+                                        else "backend-refresh-unavailable")
+                if not isinstance(error, (BudgetExceeded, GuardUnavailable)):
+                    try:
+                        self.guard.refresh_failed()
+                    except GuardUnavailable:
+                        pass
+                logging.getLogger("samvaad.public").warning("Public snapshot refresh held: %s", type(error).__name__)
+                if self._profiles is None:
+                    self._profiles = self.fallback.portfolio_profiles()
+                    self._from_snowflake = False
+            finally:
+                if backend is not None:
+                    # A public refresh opens one short-lived connection. It is
+                    # never left alive until Streamlit resource-cache expiry.
+                    connection = getattr(getattr(backend, "session", None), "connection", None)
+                    if connection is not None:
+                        try:
+                            connection.close()
+                        except Exception as error:
+                            logging.getLogger("samvaad.public").warning("Public connection close failed: %s", type(error).__name__)
+
+    @property
+    def is_live(self):
+        self._ensure_snapshot()
+        return self._from_snowflake
+
+    def customers(self):
+        self._ensure_snapshot()
+        with self._lock:
+            return copy.deepcopy([view["customer"] for view in self._profiles])
+
+    def portfolio_profiles(self):
+        self._ensure_snapshot()
+        with self._lock:
+            return copy.deepcopy(self._profiles)
+
+    def customer360(self, customer_id):
+        self._ensure_snapshot()
+        with self._lock:
+            view = next((view for view in self._profiles if view["customer"]["customer_id"] == customer_id), None)
+            if view is None:
+                raise DemoError("Select a customer in the loaded synthetic portfolio.")
+            return copy.deepcopy(view)
+
+    def rows(self, sql, params=None):
+        raise DemoError("Public visitor requests are served from the protected snapshot, not arbitrary SQL.")
+
+    def answer(self, customer_id, question, *, cortex=False):
+        answer = super().answer(customer_id, question, cortex=cortex)
+        if answer["provider"] != "Policy boundary":
+            answer["provider"] = ("Protected Snowflake snapshot + deterministic evidence summary" if self.is_live
+                                  else "Bundled synthetic snapshot + deterministic evidence summary")
+        return answer
+
+    def source_status(self):
+        self._ensure_snapshot()
+        with self._lock:
+            now = self.clock()
+            status = {"source": "snowflake-cache" if self._from_snowflake else "bundled-synthetic-snapshot",
+                "snapshot_age_seconds": None if self._loaded_at is None else max(0, int(now - self._loaded_at)),
+                "last_refresh": None if self._loaded_at is None else datetime.fromtimestamp(self._loaded_at, timezone.utc).isoformat(),
+                "next_refresh_seconds": max(0, int(self._next_attempt - now)),
+                "refresh_interval_seconds": self.refresh_seconds,
+                "refresh_status": self._refresh_reason,
+                "stale": self._from_snowflake and now - self._loaded_at >= self.refresh_seconds,
+                "visitor_queries": 0, "visitor_ai_requests": 0}
+            from public_app.security import GuardUnavailable
+            try:
+                status.update(self.guard.stats())
+            except GuardUnavailable:
+                status.update(protection_unavailable=True, scope="shared-application-host", distributed=False)
+            return status
 
 
 class ReviewSandbox:

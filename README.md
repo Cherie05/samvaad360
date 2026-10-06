@@ -10,6 +10,10 @@ The live command center passes **283 tests in GitHub** and **11 independent host
 
 The anonymous website is deployed on free Streamlit Community Cloud hosting with a genuine Snowflake backend. Its dedicated reader retrieves 20 fictional customers from `SAMVAAD_STAGING.PUBLIC_DEMO`; public reviews and conversations simulate a workflow within each visit. The hosted checks cover live data, review gates, adaptive conversations, evidence scope, visitor isolation, consent restrictions and mobile layout. Browser speech controls work; audible playback depends on the visitor's browser and was not independently verified. See [deployment and verification](docs/public-website-deployment.md). Snowflake queries use trial credits; hosting is free. A clearly labelled fictional backup keeps the demo browsable if the trial is unavailable.
 
+The enterprise extension adds exposure/action charts, a repayment/conversation timeline, retention-rule contributions, data-quality coverage, four-context policy comparison and downloadable decision evidence. Shared hourly snapshots, atomic application-query budgets and action throttles keep ordinary visitor workflows away from Snowflake queries. On Community Cloud the throttle is shared; trustworthy per-IP enforcement requires a managed gateway. See [the enterprise release plan](docs/enterprise-release-plan.md).
+
+Telephone calling now has a genuine Twilio API integration and staff-only controls for existing or additional verified numbers. It is disabled until the provider, HTTPS API, permitted recipients and staff login are configured. The service validates signed callbacks and current approvals, holds uncertain dispatches instead of redialing, and stores controlled-pilot outcomes in SQLite. No real call or SMS has been sent, and production readiness remains false. See [real telephone setup](docs/real-telephony-pilot.md).
+
 ## Hackathon cloud account setup
 
 The separate Snowflake-hosted demo is packaged for `ZYLTUKM-HU63768` / `ARUNVPP24`. Run this from the workspace in your own PowerShell terminal; enter password/MFA only in its hidden local prompts:
@@ -65,7 +69,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe scripts/provision_voice.py --download
 ```
 
-The lock file captures the installed Windows/Python 3.11 environment, including optional cloud, voice and development tools. For a smaller install, `requirements.txt` is the web runtime, `requirements-dev.txt` adds tests, and `requirements-voice.txt`, `requirements-cloud.txt` and `requirements-browser.txt` are optional. Voice model provisioning is an explicit network download; runtime transcription loads local files only. No personal voice recording or paid speech API is needed. No Snowflake credits are used locally.
+The lock file captures the installed Windows/Python 3.11 environment, including optional cloud, voice and development tools. For a smaller install, `requirements.txt` is the web runtime, `requirements-dev.txt` adds tests, and `requirements-voice.txt`, `requirements-cloud.txt` and `requirements-browser.txt` are optional. Voice model provisioning is an explicit network download; runtime transcription loads local files only. No personal voice recording or paid speech API is needed for the local voice lab. Local SQLite mode uses no Snowflake credits; a public-app preview configured with the Snowflake reader does consume credits for protected refreshes.
 
 ## Rehearse the product
 
@@ -112,7 +116,7 @@ For a standard Snowflake trial, keep production action/consent/session state in 
 
 The [self-hosted telecalling plan](docs/telecalling-plan.md) specifies Asterisk ARI, a durable worker, local Whisper recognition, a stock neural voice, human handoff and a licensed SIP trunk. Parler Mini v1 is the provisional production voice candidate. Its complete tokenizer/codec/runtime bundle still needs a pinned license review and target-hardware benchmark; the installed Windows voice is only the local lab provider. See the [voice license review](docs/voice-license-review.md) and [deployment scaffold](infra/voice/README.md).
 
-Production identity, PBX integration, carrier delivery, Hindi/accent quality checks, full Snowflake/Cortex application integration, and real CoCo execution remain pending. Insurance claims are an additional domain; this release implements the lender PRD. The [original build plan](output/Samvaad360_Build_Plan.md) records hackathon fit and published timing; local operation alone does not establish Snowflake/CoCo eligibility.
+Production identity, carrier delivery, Hindi/accent quality checks, full Snowflake/Cortex application integration, and real CoCo execution remain pending. The Twilio pilot uses stock provider speech; PBX integration and neural voice assets belong to the optional self-hosted path. Insurance claims are an additional domain; this release implements the lender PRD. The [original build plan](output/Samvaad360_Build_Plan.md) records hackathon fit and published timing; local operation alone does not establish Snowflake/CoCo eligibility.
 # GitHub deployment
 
 Source and deployment workflow: [public repository](https://github.com/Cherie05/samvaad360). See [the GitHub deployment guide](docs/github-deployment.md) for the completed Snowflake OIDC setup and subsequent releases. [The verified release](https://github.com/Cherie05/samvaad360/actions/runs/37365585311) passed 283 tests; the owner separately confirmed private hosted startup. Ordinary code pushes to `main` test and deploy automatically.

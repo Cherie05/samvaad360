@@ -1,0 +1,12 @@
+.git
+.venv
+.local
+output
+__pycache__
+.env
+.env.*
+*.db
+*.sqlite
+*.pem
+*.key
+Samvaad360_PRD.pdf

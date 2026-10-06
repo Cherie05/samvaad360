@@ -1,0 +1,24 @@
+# Use the allowlist for this Dockerfile even when the build context is repo root.
+**
+!infra/
+!infra/voice/
+!infra/voice/requirements.txt
+!samvaad/
+!samvaad/**
+!webhook/
+!webhook/**
+!cloud/
+!cloud/**
+!public_app/
+!public_app/**
+!tools/
+!tools/**
+**/__pycache__/
+**/*.pyc
+**/.env
+**/secrets.toml
+**/*.pem
+**/*.key
+**/*.db
+**/.local/
+**/output/

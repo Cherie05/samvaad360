@@ -4,6 +4,8 @@ Updated **6 October 2026, IST**. The redesigned prototype is live at [samvaad360
 
 ## Product focus
 
+The implemented extension adds portfolio exposure and intervention charts, a repayment/conversation timeline, explicit retention-rule contributions, governance coverage, a four-context comparison and a downloadable decision evidence packet. Shared hourly Snowflake snapshots now enforce application-query budgets and visitor throttling. A genuine Twilio telephone transport and staff-only existing/additional-number controls are prepared but unconfigured. See [the enterprise implementation and release plan](enterprise-release-plan.md) for current protection scope, carrier activation and remaining production gates.
+
 Build a lender officer's workbench that answers three practical questions: **Who needs attention, what should we do, and what changed after the conversation?** Combine loan and repayment facts with borrower emails, chats and call transcripts. Give each recommendation a reason, source evidence, required reviewer and contact policy.
 
 The distinctive demonstration is a complete loop:
