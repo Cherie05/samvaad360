@@ -102,7 +102,33 @@ def test_parallel_requests_cannot_overspend_burst(guard):
     with ThreadPoolExecutor(max_workers=12) as pool:
         results = list(pool.map(lambda _: limiter.admit(VisitorIdentity(), kind="action"), range(80)))
     assert sum(r.allowed for r in results) == 30
+    assert all(r.allowed or r.reason == "rate-limited" for r in results)
     assert limiter.stats()["requests_blocked"] == 50
+
+
+def test_guard_closes_every_database_connection(tmp_path, monkeypatch):
+    original_connect = sqlite3.connect
+    opened, closed = [], []
+
+    class TrackedConnection(sqlite3.Connection):
+        def close(self):
+            closed.append(self)
+            super().close()
+
+    def connect(*args, **kwargs):
+        connection = original_connect(*args, **kwargs, factory=TrackedConnection)
+        opened.append(connection)
+        return connection
+
+    monkeypatch.setattr(sqlite3, "connect", connect)
+    limiter = PublicGuard(tmp_path / "guard.db", clock=Clock())
+    assert limiter.admit(VisitorIdentity()).allowed
+    limiter.reserve_queries(5)
+    assert limiter.stats()["application_statements_hour"] == 5
+    assert len(opened) == 4 and opened == closed
+    for connection in opened:
+        with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+            connection.execute("SELECT 1")
 
 
 def test_bucket_capacity_is_bounded_and_addresses_are_not_persisted(tmp_path):

@@ -22,6 +22,7 @@ import sqlite3
 import tempfile
 import threading
 import time
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Mapping
@@ -128,9 +129,13 @@ class PublicGuard:
         self.clock = clock
         self.hourly_statements, self.daily_statements = hourly_statements, daily_statements
         self.max_buckets = max_buckets
+        # Queue this process's brief writes before taking SQLite's cross-process
+        # lock. Contending Streamlit threads must not starve one another until
+        # the database timeout; other processes still use BEGIN IMMEDIATE.
+        self._transaction_lock = threading.RLock()
         try:
             self.path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-            with sqlite3.connect(self.path, timeout=2) as connection:
+            with closing(sqlite3.connect(self.path, timeout=2)) as connection, connection:
                 connection.executescript("""
                     CREATE TABLE IF NOT EXISTS guard_metadata (name TEXT PRIMARY KEY, value TEXT NOT NULL);
                     CREATE TABLE IF NOT EXISTS guard_buckets (name TEXT PRIMARY KEY, tokens REAL NOT NULL, updated REAL NOT NULL);
@@ -152,7 +157,7 @@ class PublicGuard:
 
     def _transaction(self, operation):
         try:
-            with sqlite3.connect(self.path, timeout=2, isolation_level=None) as connection:
+            with self._transaction_lock, closing(sqlite3.connect(self.path, timeout=2, isolation_level=None)) as connection:
                 connection.execute("BEGIN IMMEDIATE")
                 result = operation(connection)
                 connection.execute("COMMIT")
