@@ -2,7 +2,7 @@
 
 The public lender prototype uses Streamlit Community Cloud for its browser UI and Python backend, and this hackathon account for live analytical reads. Community Cloud hosting is free; Snowflake warehouse queries consume account credits. The existing private Snowsight app remains the operator demonstration.
 
-**Verified public website:** [samvaad360.streamlit.app](https://samvaad360.streamlit.app/). **Public source:** [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). On 6 October 2026 IST, all 11 checks passed in fresh anonymous browser contexts with the live Snowflake source and redesigned five-workspace UI. [GitHub passed 283 tests and deployed the private operator app](https://github.com/Cherie05/samvaad360/actions/runs/37365585311), source commit `0d78eb7`. The deployment steps below also serve as recovery instructions.
+**Verified public website:** [samvaad360.streamlit.app](https://samvaad360.streamlit.app/). **Public source:** [Cherie05/samvaad360](https://github.com/Cherie05/samvaad360). At **2026-10-06T10:01:09.172213Z**, all **15 checks** passed in fresh anonymous browser contexts with the genuine Snowflake snapshot, 20 customers and new charts/protection/evidence controls. [GitHub passed 400 tests and deployed the private operator app](https://github.com/Cherie05/samvaad360/actions/runs/37446880972), source `be60c2aaaaaedc3e5bf6384fbb5df54f28f8df18`. The public browser observed features after that push; Community Cloud does not directly report its commit. The deployment steps below also serve as recovery instructions.
 
 | Component | Public deployment |
 | --- | --- |
@@ -16,11 +16,13 @@ The public lender prototype uses Streamlit Community Cloud for its browser UI an
 | Call studio | Review-gated browser conversation, click-to-play voice controls, typed replies, evidence-driven policy changes and downloadable transcript; no carrier dialing |
 | Telephone controls | Separate staff-authenticated Twilio API bridge; disabled until provider, HTTPS API and authorised destinations are configured; public reviews cannot authorise calls |
 | Visualisations | Overdue exposure, intervention mix, repayment/conversation timeline, explicit rule contributions and observed signal coverage |
-| Visitor spend protection | Shared hourly snapshots and host-persistent query reservations; 8 application statements/hour and 64/day; no public refresh or arbitrary SQL |
+| Visitor spend protection | Shared hourly snapshots and host-local reservations; 8 application statements/hour and 64/day; no public refresh or arbitrary SQL; host replacement can reset storage |
 | Evidence answers | Deterministic summaries with transcript citations; no public Cortex calls |
 | Backup when the trial is unavailable | Checked fictional JSON bundle, prominently labelled offline; never described as a live Snowflake response |
 
 The raw public adapter admits seven fixed, bounded read queries. The hosted `GuardedSnapshotReader` reserves five application statements before an hourly refresh: one identity check and four portfolio reads. It closes the connection and serves all customer/evidence/review workflows from independent memory copies. The host budget permits at most 12 full refresh attempts per UTC day; failed attempts remain charged. Stale Snowflake snapshots are dated and a bundled fallback is clearly labelled. The counter does not measure connector-internal traffic or billed credits, and host replacement can reset its storage. The existing X-Small warehouse auto-suspends after 60 seconds and has a separate five-credit daily warehouse monitor. That monitor is not an account-wide spending guarantee. See [protection and managed-IP setup](enterprise-release-plan.md).
+
+Admission on this free host uses shared anonymous limits. Reported Streamlit IPs and arbitrary forwarded headers are not trusted security identities. The prepared managed NGINX peer-IP limits and future signed-edge identity support are not deployed on Community Cloud.
 
 ## Deploy from the signed-in Create app screen
 
@@ -47,9 +49,11 @@ The raw public adapter admits seven fixed, bounded read queries. The hosted `Gua
 
 If the sidebar says **offline synthetic snapshot**, the website is functioning in backup mode; live Snowflake connectivity has not passed for that hosting instance. Check its private logs/settings rather than presenting the fallback as a cloud database result.
 
+During fresh anonymous verification, Community Cloud displayed **“This app has gone to sleep due to inactivity”** before startup. Click **“Yes, get this app back up!”**, wait for the app to load, then check its data-source label and rerun verification. Waking it was followed by the successful 15-check run. Free-host sleep and cold starts mean this prototype does not provide a production availability guarantee; no fixed wake duration was measured.
+
 ## Verification and ongoing updates
 
-The local and GitHub gates passed 283 tests (37.32 and 40.53 seconds respectively). Real service-key authentication retrieved 20 customers and verified portfolio assembly in four bounded reads. Eleven browser checks passed against localhost, then against the public host, with actual Snowflake reads: five workspaces, readable policy/evidence, review gates, voice controls/text fallback, conditional-negotiation refusal, hardship decision changes, visitor isolation, evidence scope, what-if rules, DND restriction and mobile layout. Eight desktop/mobile screenshots were inspected. Browser audio audibility is unverified; control behavior and text conversation are verified.
+The local and GitHub gates passed **400 tests** in **69.38** and **71.42 seconds**, respectively, with one nonblocking test-client warning. Both local and public browser runs passed **15 checks** using a genuine 20-customer Snowflake snapshot: five workspaces, rendered charts, visible usage protection, disabled anonymous phone operations, scoped contact-free evidence download, policy/review/conversation gates, hardship changes, isolation, what-if, consent and mobile layout. Browser audio audibility and actual telephone delivery remain unverified. The dependency audit found zero known advisories across 103 local distributions, with no skips; private Snowflake runtime advisories are tracked separately.
 
 For a distinctive demo, choose Imran, request and approve a simulation review, then start Call studio. Complete permission and fictional identity checks before submitting `I lost my job`. His conditional top-up stops, the actual quote appears as new evidence, and the conversation ends with human handoff. Separately, Kabir's job-loss what-if changes his reminder to hardship support. Neither demonstration changes saved financial data or claims a validated churn prediction.
 
